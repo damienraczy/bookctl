@@ -105,7 +105,7 @@ renvoient et ne la recopient pas.
 | L6 | Transitions | lier | `link` | Intégrateur | raccords dans `book/chapters/` | — | — | |
 | L7 | Harmonisation | unifier | `unify` | Intégrateur | `book/chapters/` + `state/` (termes, crossrefs) | — | `noul` (lot) | |
 | L8 | Correction stylistique | polir | `polish` | Correcteur + Vale | `book/chapters/NN/<cible>.md` | **H4** | `score` | |
-| L9 | Contrôle final | verrouiller | `lock` | **System 1 + Vale + compteurs** | `reports/lock.md` | **H5** | `noul` (lot) | |
+| L9 | Contrôle final | verrouiller | `lock` | Auditeur (propose) + **System 1 + Vale + compteurs** (décident) | `reports/lock/NN.md`, `reports/lock.md` | **H5** | `noul` (lot, confirmation) | |
 | L10 | Assemblage | générer | `build` | **Outil (Pandoc)** | `exports/` : PDF / EPUB / DOCX | — | — | *optionnel* |
 
 Remarques :
@@ -113,9 +113,11 @@ Remarques :
 - **L5** est une revue factuelle par un expert métier (SME) : un *checkpoint
   humain*. La commande `review` prépare le gabarit d'annotations
   (`03-cli.md` § 3.1) ; System 1 peut pré-filtrer, pas valider le fond.
-- **L9** n'a pas d'agent LLM : la non-régression est jugée par System 1, Vale
-  et des compteurs déterministes, contre la référence enregistrée à
-  l'acceptation de L4 (`03-cli.md` § 3.2).
+- **L9** suit le principe « **l'Auditeur propose, System 1 dispose** » (§ 6.1) :
+  la non-régression est mesurée par Vale, des compteurs et System 1 contre la
+  référence enregistrée à l'acceptation de L4 ; l'Auditeur (LLM) cherche en plus
+  les problèmes globaux, mais seuls ses constats confirmés par System 1 entrent
+  dans le verdict (`03-cli.md` § 3.2).
 - **L10** est une compilation déterministe : un *outil*, pas un agent.
 - **L7** modifie les chapitres (alignement des termes, renvois) **et** l'état
   éditorial (`state/concepts.yml`, `state/crossrefs.yml`). Il dépend de *tous*
@@ -130,7 +132,7 @@ Remarques :
 
 | Nature | Exemples | Modèle | Rôle |
 |---|---|---|---|
-| **Agent LLM** | Planificateur, Recherche, Rédacteur, Intégrateur, Correcteur | génératif (cloud, via DSPy) | produire / réécrire du texte |
+| **Agent LLM** | Planificateur, Recherche, Rédacteur, Intégrateur, Correcteur, Auditeur | génératif (cloud, via DSPy) | produire / réécrire du texte, proposer des constats |
 | **Juge System 1** | jugement de style, de cohérence, de non-régression | décisionnel | juger / router avec un signal de certitude |
 | **Outil déterministe** | Vale, compteurs, Pandoc | aucun | barrière, mesure, export |
 | **Checkpoint humain** | SME, gates H | humain | décisions de fond non déléguables |
@@ -153,6 +155,7 @@ supplémentaire. Un agent = une responsabilité, pas une étape fine.
 | **Rédacteur** | L4 | rédiger le premier jet | `write` |
 | **Intégrateur** | L6, L7 | lier les transitions, unifier la cohérence | `integrate` |
 | **Correcteur** | L8 (et sur `escalate`) | polir selon les règles FR | `rewrite` |
+| **Auditeur** | L9 | proposer des constats globaux ; ne décide jamais | `audit` |
 
 Séparations clés :
 
@@ -160,6 +163,34 @@ Séparations clés :
   que la gate a signalé (non-auto-évaluation).
 - **Planificateur ≠ Rédacteur** : l'un décide la structure, l'autre exécute une
   tranche.
+- **Auditeur ≠ Rédacteur ≠ Correcteur** : l'Auditeur ne juge pas un texte qu'il
+  a produit ou corrigé.
+
+### 6.1 L'Auditeur : proposer sans décider
+
+L'Auditeur couvre ce que les questions atomiques de System 1 ne savent pas
+formuler seules : contradictions avec la constitution, promesses du plan non
+tenues, progression illogique entre chapitres, concept utilisé avant d'être
+défini. Mais un LLM qui juge n'est ni reproductible ni exempt de complaisance.
+D'où la règle : **l'Auditeur propose, System 1 dispose.**
+
+- **[S02-12]** L'Auditeur lit, pour un chapitre : la constitution, l'outline,
+  le contrat et le plan du chapitre, le chapitre poli et `state/concepts.yml`.
+  Jamais le livre entier.
+- **[S02-13]** Il produit une liste de **constats typés et localisés** :
+  `catégorie` (liste fermée, `04-primitives-system1.md` § 4.5), `cible`,
+  `passage` cité, `référence` citée (phrase de la constitution, point du plan,
+  définition), `explication`. Un constat sans passage ou sans référence citée
+  textuellement est rejeté au chargement.
+- **[S02-14]** Chaque constat est converti en question System 1 de
+  confirmation. Seuls les constats **confirmés avec certitude** comptent dans
+  le verdict (`fail`). Les constats incertains donnent `escalate`. Les constats
+  infirmés sont consignés dans le rapport, sans effet sur le verdict.
+- **[S02-15]** L'Auditeur ne peut qu'**ajouter** des défauts : il n'annule
+  jamais un `fail` issu de Vale, des compteurs ou de System 1.
+- **[S02-16]** Tant que System 1 n'est pas branché (`system1.enabled: false`),
+  les constats de l'Auditeur vont dans le rapport **sans effet sur le
+  verdict**, marqués « non confirmés » ; l'auteur les tranche à la gate H5.
 
 ---
 
@@ -192,6 +223,28 @@ critère_d_acceptation:
 
 **[S02-05]** Le contrat rend chaque agent **remplaçable et testable
 isolément** : on peut faire tourner le Rédacteur seul sur une tranche.
+
+### 7.1 Tranches de contexte par étape
+
+**[S02-17]** Chaque agent reçoit exactement les entrées ci-dessous, plus
+l'instruction complémentaire éventuelle (`--message` / `--instructions`). Toute
+entrée lue est enregistrée dans le manifeste avec son empreinte
+(`03-cli.md` § 8.2).
+
+| Étape | Agent | Entrées (tranche) |
+|---|---|---|
+| L0 `init` | Planificateur | instruction de l'auteur ; `research/` si présent |
+| L1 `collect` | Recherche | constitution ; instruction de l'auteur |
+| L2 `outline` | Planificateur | constitution ; synthèse de `research/` si présente |
+| L3 `detail N` | Planificateur | constitution ; entrée N de l'outline ; titres et résumés des chapitres N−1 et N+1 ; `terminology.yml` |
+| L4 `draft N.s` | Rédacteur | section N.s du plan et contrat du chapitre N ; `terminology.yml` ; concepts de `state/concepts.yml` introduits **avant** N.s ; `style_system.md` |
+| L6 `link N.s` | Intégrateur | dernier paragraphe de la cible précédente, cible N.s, premier paragraphe de la suivante ; leurs entrées de plan |
+| L7 `unify N.s` | Intégrateur | cible N.s ; `terminology.yml` ; `state/concepts.yml` ; `state/crossrefs.yml` |
+| L8 `polish N.s` | Correcteur | cible N.s ; violations Vale et questions System 1 non conformes de sa dernière gate ; annotations SME de la cible (L5) ; guide stylistique |
+| L9 `lock N` | Auditeur | § 6.1 |
+
+Les fichiers `state/` sont mis à jour par `bookctl` à l'`accept` (concepts
+définis, renvois), jamais par l'agent directement.
 
 ---
 
@@ -276,10 +329,12 @@ verdict et son code de retour).
 | Rédacteur | LLM `write` | produit le texte |
 | Juge | System 1 | évalue sans générer, pas de complaisance |
 | Correcteur | LLM `rewrite` (≠ `write`) | réécrit ce que la gate a signalé |
+| Auditeur | LLM `audit` (≠ `write`, ≠ `rewrite`) | propose des constats, confirmés par System 1 |
 | Reflection (DSPy) | LLM `reflect` (≠ `write`, ≠ `rewrite`) | produit le feedback textuel de GEPA |
 
-**[S02-10]** Au chargement de `params.yml`, `bookctl` vérifie que `write`,
-`rewrite` et `reflect` désignent des modèles distincts ; sinon exception.
+**[S02-10]** Au chargement de `params.yml`, `bookctl` vérifie que `write` et
+`rewrite` sont distincts entre eux, et que `audit` et `reflect` sont chacun
+distincts de `write` et de `rewrite` ; sinon exception.
 
 ---
 
@@ -314,7 +369,9 @@ deux étapes ; ce choix ne conditionne pas le CLI.
 
 ---
 
-## 14. Points ouverts
+## 14. Valeurs à mesurer
+
+Ce ne sont pas des choix de conception, mais des valeurs fixées par la mesure
+(spikes, boucle 1, premiers chapitres).
 
 - Seuils de routage System 1 : à calibrer par la boucle 1 (`06-boucles-dspy.md`).
-- Granularité exacte des tranches de contexte par étape.

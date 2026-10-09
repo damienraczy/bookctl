@@ -224,6 +224,8 @@ utilise DSPy pour rendre System 1 fiable, puis il devient une métrique.
 - **DSPy** : moteur des agents LLM, puis optimiseur des questions System 1 et du
   rédacteur. Jamais orchestrateur, jamais persistance.
 - **Vale** : première barrière déterministe. System 1 ne la remplace pas.
+- **L'Auditeur** (LLM, contrôle final) : propose des constats globaux ; seuls
+  ceux que System 1 confirme comptent. Il ne décide jamais (`02-agents.md` § 6.1).
 - **L'agent** : exécute une commande à la fois, lit et écrit l'état. Il
   **n'orchestre pas** : l'utilisateur conduit la séquence L0→L10.
 

@@ -209,7 +209,10 @@ compilation, le Rédacteur consomme une instruction manuelle de `prompt/`.
 
 ---
 
-## 6. Points ouverts
+## 6. Valeurs à mesurer
+
+Ce ne sont pas des choix de conception, mais des valeurs fixées par la mesure
+(spikes, boucle 1, premiers chapitres).
 
 - **Adaptateur GEPA pour System 1** : à valider par un spike (§ 2.2).
 - **Coefficients de la métrique composite** : à ajuster dans `params.yml`.

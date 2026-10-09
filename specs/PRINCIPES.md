@@ -45,7 +45,7 @@ type(scope): [ID] [RED|GREEN|REFACTOR] sujet
 - `ID` : identifiant de l'exigence (§3), ou `DOC` pour une modification de spec sans exigence.
 - La phase TDD est obligatoire pour `feat`, `fix`, `test`, `refactor`.
 
-Exemple : `feat(cli): [S03-07] [GREEN] résolution du sujet par --subject`.
+Exemple : `feat(cli): [S03-05] [GREEN] résolution du sujet par --subject`.
 
 ---
 

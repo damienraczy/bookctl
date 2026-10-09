@@ -69,6 +69,7 @@ models:
       write: glm-flash
       integrate: deepseek-pro
       rewrite: mistral-large
+      audit: deepseek-pro
       reflect: deepseek-pro
 
 llm_config: *standard
@@ -78,8 +79,9 @@ Règles :
 
 - `url` et `api_key` sont des **noms** de variables d'environnement, lues dans
   `~/.env` au moment de l'appel.
-- Les rôles `write`, `rewrite` et `reflect` doivent désigner des modèles
-  distincts (`specs/02-agents.md` § 11) ; sinon exception au chargement.
+- `write` et `rewrite` sont distincts ; `audit` et `reflect` sont chacun
+  distincts de `write` et de `rewrite` (`specs/02-agents.md` § 11) ; sinon
+  exception au chargement.
 - `price` (optionnel) sert à afficher une estimation de coût ; absent → le coût
   est affiché comme inconnu, jamais comme nul.
 

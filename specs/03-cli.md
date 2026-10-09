@@ -144,6 +144,7 @@ models:
       write: glm-flash
       integrate: deepseek-pro
       rewrite: mistral-large
+      audit: deepseek-pro
       reflect: deepseek-pro
 
 llm_config: *standard               # profil actif
@@ -195,12 +196,42 @@ Commandes : `init`, `collect`, `outline`, `detail`, `draft`,
 les sections du chapitre. Le SME le remplit ; `accept` clôt la revue (gate H3).
 Les annotations deviennent une entrée de `link` et `polish`.
 
-### 3.2 `lock` (L9) et sa référence
+### 3.2 `lock` (L9) : l'Auditeur propose, System 1 dispose
 
 **[S03-06]** À l'`accept` d'un artefact de L4, `bookctl` enregistre ses mesures
 dans `state/baseline/` (violations Vale par catégorie, jugements System 1,
-nombre de mots). `lock` compare l'état poli à cette référence et rend `fail` si
-la révision introduit plus de défauts qu'elle n'en retire.
+nombre de mots). C'est la référence de la non-régression.
+
+`lock <chapitre>` déroule quatre temps, pour chaque chapitre visé :
+
+1. **Mesure** — Vale, compteurs (mots, termes hors lexique, redéfinitions
+   relevées dans `state/concepts.yml`) et questions System 1 de non-régression,
+   comparés à la référence.
+2. **Constats** — l'Auditeur (rôle `audit`) lit le chapitre et ses références
+   (`02-agents.md` § 6.1) et propose des constats typés et localisés.
+3. **Confirmation** — chaque constat devient une question System 1
+   (`04-primitives-system1.md` § 4.5) : confirmé, infirmé ou incertain.
+4. **Verdict et rapport** — agrégation du § 3.2 de `04` sur les mesures et les
+   constats confirmés ou incertains ; rapport écrit dans
+   `reports/lock/NN.md`.
+
+**[S03-21]** `lock` rend `fail` si la révision introduit plus de défauts
+qu'elle n'en retire par rapport à la référence, ou si un constat est confirmé.
+
+**[S03-22]** Sans cible, `lock` traite tous les chapitres puis écrit la
+synthèse `reports/lock.md`, qui est l'artefact de la gate H5 (le livre
+complet).
+
+Le rapport d'un chapitre a toujours la même structure :
+
+```markdown
+# Contrôle final — chapitre NN
+## Verdict            pass | fail | escalate, et pourquoi
+## Non-régression     tableau référence L4 → état L8, par mesure
+## Constats confirmés catégorie, cible, passage, référence, explication
+## Constats à vérifier (incertains, ou non confirmés si System 1 est débranché)
+## Constats infirmés  rappel bref, pour mémoire
+```
 
 ### 3.3 `build` (L10)
 
@@ -342,6 +373,7 @@ obtenus (§ 7.2).
 |---|---|
 | `draft` | la **cible courante** si elle est rédigeable ; sinon la **prochaine** section non rédigée selon le plan |
 | `polish`, `review`, `link` | la cible courante |
+| `lock` | tous les chapitres, puis la synthèse (§ 3.2) |
 | `build` | le sujet entier |
 | `accept` / `retry` / `resume` | la **dernière action** du sujet |
 | `redo` | la **dernière action** (même étape, même cible) |
@@ -369,20 +401,57 @@ interactive.
 
 ### 7.1 Contenu du verdict
 
+**[S03-23]** Le verdict a un schéma versionné. Avec `--json`, `bookctl` écrit
+sur stdout un objet par commande (un tableau `results` pour plusieurs cibles) ;
+les messages humains vont sur stderr.
+
+```json
+{
+  "schema_version": "1.0",
+  "command": "draft",
+  "subject": "manuel-ia",
+  "exit_code": 1,
+  "results": [
+    {
+      "target": "3.2",
+      "verdict": "fail",
+      "artefact": "manuel-ia/book/chapters/03/3.2.md",
+      "revision": 4,
+      "status": "draft",
+      "gate": {
+        "vale": {
+          "verdict": "fail",
+          "violations": [
+            {"line": 12, "column": 5, "rule": "fr.Chevilles", "level": "error",
+             "match": "il convient de", "message": "Cheville : « il convient de »"}
+          ]
+        },
+        "counters": {"words": 1180, "terms_outside_lexicon": 0, "redefinitions": 0},
+        "system1": {
+          "enabled": true,
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "verdict": "pass",
+          "questions": {
+            "ternaire": {"type": "noul", "value": 0.07, "certainty": 0.86, "band": "certain", "conforming": true}
+          }
+        },
+        "audit": null
+      },
+      "human_gate": "not_required",
+      "prerequisites": []
+    }
+  ]
+}
 ```
-verdict: pass | fail | escalate
-target: <cible>
-artefact: <chemin>
-revision: <n>
-gate:
-  vale:
-    violations: [ ... ]            # liste précise (fichier, ligne, règle, niveau)
-  system1:                         # absent si system1.enabled = false
-    questions: { <nom>: { type, valeur, certitude, bande } }
-    verdict: pass | fail | escalate
-human_gate: required | not_required
-prerequisites: [ ... ]             # étapes manquantes le cas échéant
-```
+
+- `status` : `draft`, `accepted` ou `stale` (§ 8.2).
+- `system1` vaut `{"enabled": false}` quand le juge est débranché.
+- `audit` n'est rempli que par `lock` : `{"findings": [{"category", "target",
+  "passage", "reference", "explanation", "confirmation": "confirmed" |
+  "rejected" | "uncertain" | "unconfirmed"}]}`.
+- Les erreurs (codes `2`, `4`, `5`) renvoient `{"schema_version", "command",
+  "exit_code", "error": {"type", "message"}}`.
 
 ### 7.2 Codes de retour
 
@@ -396,7 +465,8 @@ prerequisites: [ ... ]             # étapes manquantes le cas échéant
 | `5` | erreur d'exécution (configuration, clé API, fournisseur injoignable) |
 
 **[S03-16]** Gravité, pour le code agrégé d'une exécution multi-cibles :
-`5` > `4` > `2` > `3` > `1` > `0`.
+`5` > `4` > `2` > `1` > `3` > `0` (un `fail` l'emporte sur un
+`escalate`, comme dans `04-primitives-system1.md` § 3.2).
 
 ---
 
@@ -410,6 +480,8 @@ Les artefacts d'un sujet ne sont pas dans git. `bookctl` les versionne lui-même
 copie horodatée dans `history/<chemin de l'artefact>/<n>.md`, avec la commande,
 l'instruction, le verdict et les modèles utilisés. Les révisions ne sont jamais
 modifiées.
+
+**[S03-24]** Les révisions sont toutes conservées ; aucune purge automatique.
 
 Commandes de consultation (lecture seule) :
 
@@ -479,9 +551,9 @@ bookctl redo detail 3 --stop draft                   # refaire le plan du chapit
 
 ---
 
-## 12. Points ouverts
+## 12. Options locales
 
-- **Options locales par commande** (ex. `--words`) : à spécifier avec les
-  primitives.
-- **Schéma JSON du verdict** : à figer avant l'implémentation.
-- **Purge de l'historique** : politique de conservation des révisions.
+**[S03-25]** En v1, les seules options locales sont `--stop <command>` (`redo`)
+et `--keep-going` (cibles multiples). Toute autre consigne passe par
+`--message` ou `--instructions`. Une nouvelle option locale (ex. `--words`)
+s'ajoute par révision de cette spec.

@@ -172,6 +172,7 @@ on ne tronque pas.
 | L7 | `unify` | `noul` (lot) | « ce concept est-il déjà défini ailleurs ? » | section |
 | L8 | `polish` | `score` | « conformité au guide stylistique ? » | section |
 | L9 | `lock` | `noul` (lot) | « la révision introduit-elle plus de tics qu'elle n'en retire ? » | section (avant / après) |
+| L9 | `lock` | `noul` (lot) | confirmation des constats de l'Auditeur (§ 4.5) | passage + référence |
 
 Les étapes L0, L1, L5, L6, L10 n'appellent pas System 1.
 
@@ -180,6 +181,32 @@ Les étapes L0, L1, L5, L6, L10 n'appellent pas System 1.
 Pour L7 et L9, on émet **plusieurs questions en un seul appel** (jusqu'à 64),
 chacune jugée en isolation contre le même `state`. Exemple L7 : une `noul` par
 concept de `state/concepts.yml`, « déjà défini ? », sur une section.
+
+### 4.5 Confirmation des constats de l'Auditeur (L9)
+
+L'Auditeur (`02-agents.md` § 6.1) propose des constats ; System 1 les confirme
+ou les infirme. Chaque **catégorie** de constat a sa question de confirmation,
+dans `prompt/system1/audit_<catégorie>_system.md` :
+
+| Catégorie | Question de confirmation (`noul`) | `state` |
+|---|---|---|
+| `contradiction-these` | « ce passage contredit-il cet énoncé de la constitution ? » | passage + énoncé cité |
+| `promesse-non-tenue` | « ce chapitre traite-t-il ce point du plan ? » (non-conforme si faux) | chapitre + point cité |
+| `concept-avant-definition` | « ce passage utilise-t-il ce concept sans qu'il ait été défini auparavant ? » | passage + définition et position |
+| `redefinition` | « ce passage redéfinit-il ce concept déjà défini ? » | passage + définition existante |
+| `progression` | « ce passage suppose-t-il une notion présentée seulement plus loin ? » | passage + notion citée |
+| `fait-douteux` | « cet énoncé nécessite-t-il une vérification par un expert ? » | passage |
+
+- **[S04-10]** La liste des catégories est **fermée** : un constat d'une
+  catégorie inconnue est rejeté au chargement (exception consignée, constat
+  écarté du rapport).
+- **[S04-11]** Un constat est **confirmé** si sa réponse est certaine et non
+  conforme (§ 3.1), **infirmé** si elle est certaine et conforme, **incertain**
+  sinon. Seuls les confirmés et les incertains entrent dans l'agrégation du
+  § 3.2 ; les infirmés sont consignés.
+- La catégorie `fait-douteux` ne donne jamais `fail` : une confirmation donne
+  `escalate`, parce que le fond relève de l'expert (L5), pas de System 1.
+- Les questions de confirmation sont calibrées par la boucle 1 comme les autres.
 
 ---
 
@@ -191,8 +218,10 @@ concept de `state/concepts.yml`, « déjà défini ? », sur une section.
 | `fail` | `1` |
 | `escalate` | `3` |
 
-La gate complète combine Vale et System 1 : le verdict final est le plus grave
-des deux (`escalate` > `fail` > `pass`). Sur `escalate`, l'utilisateur décide :
+La gate complète combine Vale, les compteurs et System 1 avec la même règle
+qu'au § 3.2 : un défaut certain (`fail`) l'emporte sur une incertitude
+(`escalate`), qui l'emporte sur `pass`. Un défaut certain doit être corrigé de
+toute façon ; l'escalade n'a de sens que si rien n'est fautif avec certitude. Sur `escalate`, l'utilisateur décide :
 `resume` après intervention manuelle, ou passage au Correcteur.
 
 ---
@@ -218,7 +247,10 @@ des deux (`escalate` > `fail` > `pass`). Sur `escalate`, l'utilisateur décide :
 
 ---
 
-## 8. Points ouverts
+## 8. Valeurs à mesurer
+
+Ce ne sont pas des choix de conception, mais des valeurs fixées par la mesure
+(spikes, boucle 1, premiers chapitres).
 
 - **Seuils de routage** : à calibrer par la boucle 1.
 - **Modèle System 1 retenu** : `jev-latest` par défaut ; le choix définitif est

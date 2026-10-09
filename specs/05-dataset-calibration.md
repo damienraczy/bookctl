@@ -75,20 +75,17 @@ Chaque exemple est un texte à l'**unité de jugement** de la question visée
 (phrase, paragraphe, section ou document, `04-primitives-system1.md` § 4.2),
 avec une étiquette et un tag de motif :
 
-```yaml
-- id: ex-001
-  unit: phrase                 # phrase | paragraphe | section | document
-  text: "Cette solution n'est pas seulement rapide, mais aussi robuste."
-  label: non-conforme          # conforme | non-conforme
-  motif: ternaire              # tag du motif (vide si conforme)
-  source: corpus-ref-01        # provenance
-- id: ex-002
-  unit: phrase
-  text: "Le module compile les sources puis génère l'artefact."
-  label: conforme
-  motif: ""
-  source: corpus-ref-01
+**[S05-04]** Stockage en **JSON Lines** (`.jsonl`, UTF-8, un exemple par
+ligne) : facile à valider ligne à ligne, à fusionner et à compléter sans
+réécrire le fichier.
+
+```json
+{"id": "ex-001", "unit": "phrase", "text": "Cette solution n'est pas seulement rapide, mais aussi robuste.", "label": "non-conforme", "motif": "ternaire", "source": "corpus-ref-01"}
+{"id": "ex-002", "unit": "phrase", "text": "Le module compile les sources puis génère l'artefact.", "label": "conforme", "motif": "", "source": "corpus-ref-01"}
 ```
+
+Fichiers : `dataset/calibration/examples.jsonl` (tous les exemples) et
+`dataset/calibration/split.yml` (listes d'`id` de train, val, test).
 
 ### 2.1 Champs
 
@@ -227,10 +224,11 @@ modèle System 1 est une boucle externe (`06-boucles-dspy.md` § 2.5).
 
 ---
 
-## 9. Points ouverts
+## 9. Valeurs à mesurer
 
-- **Format de stockage** (`.yml`, `.csv`, `.jsonl`) : à figer avant
-  l'implémentation.
+Ce ne sont pas des choix de conception, mais des valeurs fixées par la mesure
+(spikes, boucle 1, premiers chapitres).
+
 - **Seuils Brier / ECE définitifs**.
 - **Prévalence réaliste** : à mesurer sur les premiers jets du sujet pilote.
 - **Double étiquetage** (accord inter-annotateurs) : écarté pour l'instant.

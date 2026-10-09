@@ -3,7 +3,7 @@
 Outil en ligne de commande pour rédiger un manuel technique en français, étape
 par étape, avec des LLM dans le cloud, sous le contrôle permanent de l'auteur.
 
-> **Statut :** spécification. Pas encore de code.
+> **Statut :** spécifications v1.0 (finalisées le 9 octobre 2026). Pas encore de code.
 
 ## Principe
 
