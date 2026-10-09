@@ -237,14 +237,37 @@ La boucle 1 exige un **dataset français étiqueté**. C'est le livrable qui
 déverrouille les deux boucles. Il sert deux fois : calibration de System 1 et
 source des règles Vale.
 
-| Phase | Contenu | Prérequis |
-|---|---|---|
-| **P0** | CLI `bookctl` + Vale + règles FR + agents LLM (DSPy, prompts manuels) + ordre incrémental | — |
-| **P1** | Protocole de mesure de calibration System 1 sur le dataset FR | dataset FR construit |
-| **P2** | Boucle 1 (GEPA calibre les questions System 1) | calibration mesurable |
-| **P3** | Boucle 2 (GEPA optimise le rédacteur) | jugement System 1 fiable |
+Le projet se conduit sur un **sujet pilote** réel : chaque phase se termine
+par du texte produit sur ce sujet, pas seulement par du code. Les composants
+risqués passent d'abord par un **spike** court et jetable, dont le critère de
+décision est écrit avant de commencer.
 
-### Documents de spécification
+| Phase | Contenu | Prérequis | Sortie |
+|---|---|---|---|
+| **S** | Spikes : **B1** ordre incrémental vs one-shot (2 chapitres pilotes) ; **B2** Jev sur 60 exemples FR (Brier, routage) ; **B5** Ollama Cloud via DSPy (noms de modèles, `think`) | — | décision consignée par spike ; un échec de B1 impose de revoir l'axe 1 avant tout code |
+| **P0** | Squelette du dépôt (liste blanche, [S00-06], [S00-07]) ; MVP : `workspace`, `subject`, `init`, `outline`, `detail`, `draft`, `polish`, `accept`, `retry`, `resume`, Vale FR, manifeste, historique, audit ; System 1 débranché | S | un chapitre pilote écrit avec l'outil, indicateurs (§ 8) meilleurs que la baseline one-shot de B1 |
+| **P0+** | Pipeline complet : `collect`, `review`, `link`, `unify`, `lock` (Auditeur, constats non confirmés), `build`, `redo` | P0 | trois chapitres consécutifs cohérents |
+| **P1** | Dataset FR + mesure de calibration ; spikes **B4** (règles Vale sur 10 000 mots) et **B6** (System 1 local, facultatif) | dataset construit (en priorité à partir des corrections réelles de l'auteur) | rapport de calibration ; repli : System 1 reste débranché, le dataset sert aux règles Vale |
+| **P2** | Spike **B3** (adaptateur GEPA), puis boucle 1 ; System 1 branché dans les gates | calibration mesurable | juge calibré, taux d'escalade supportable |
+| **P3** | Boucle 2 (optionnelle) | juge calibré et taux de réécriture encore jugé trop élevé | `style_system.md` compilé |
+
+Le chemin S → P0 → P0+ produit le livre. P1 → P3 améliorent la qualité et
+l'automatisation, sans jamais conditionner la sortie du livre.
+
+## 8. Indicateurs
+
+Calculés en code dès P0, sur le sujet pilote :
+
+| Indicateur | Définition |
+|---|---|
+| **Taux de réécriture humaine** | mots modifiés par l'auteur entre la sortie de `draft` et la version acceptée, rapportés au total |
+| **Densité de tics** | violations Vale pour 1 000 mots, par catégorie |
+| **Redéfinitions** | concepts définis plus d'une fois (`state/concepts.yml`) |
+| **Dérive terminologique** | termes hors `terminology.yml` pour 1 000 mots |
+| **Coût par chapitre** | tokens et coût estimé par chapitre accepté, nouveaux essais compris |
+| **Temps humain par chapitre** | durée entre `detail` et l'`accept` de `polish` |
+
+## 9. Documents de spécification
 
 - `specs/PRINCIPES.md` — socle de développement.
 - `specs/02-agents.md` — agents, coordination, table des étapes.

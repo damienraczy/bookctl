@@ -53,7 +53,7 @@ models:
     api_key: OLLAMA_API_KEY      # variable d'environnement → la clé
     timeout: 720
     think: high                  # optionnel : low | high | max
-    price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # pour l'estimation des coûts
+    price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement → 0
 
   deepseek-pro:
     provider: ollama
@@ -82,8 +82,10 @@ Règles :
 - `write` et `rewrite` sont distincts ; `audit` et `reflect` sont chacun
   distincts de `write` et de `rewrite` (`specs/02-agents.md` § 11) ; sinon
   exception au chargement.
-- `price` (optionnel) sert à afficher une estimation de coût ; absent → le coût
-  est affiché comme inconnu, jamais comme nul.
+- `price` (optionnel, dollars par million de tokens) sert à estimer les coûts.
+  Modèles Ollama Cloud : `0` (abonnement, pas de facturation au token). Jev :
+  0,042 $ en entrée, sortie gratuite. Autres fournisseurs : à renseigner. Absent
+  → coût affiché comme inconnu, jamais comme nul.
 
 ---
 

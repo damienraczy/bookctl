@@ -72,3 +72,4 @@ Chaque exigence testable porte un identifiant `SNN-MM` : `NN` = numéro de la sp
 | **[S00-04]** | Clé API absente ou variable d'environnement non définie → exception explicite. |
 | **[S00-05]** | Chaque appel modèle produit une entrée de journal d'audit local. |
 | **[S00-06]** | Le `.gitignore` est en liste blanche ; les données de sujet et `params.yml` sont ignorés (testé). |
+| **[S00-07]** | Un hook pre-commit refuse tout commit contenant un motif de clé d'API ou de secret. |

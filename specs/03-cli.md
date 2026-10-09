@@ -481,7 +481,8 @@ copie horodatée dans `history/<chemin de l'artefact>/<n>.md`, avec la commande,
 l'instruction, le verdict et les modèles utilisés. Les révisions ne sont jamais
 modifiées.
 
-**[S03-24]** Les révisions sont toutes conservées ; aucune purge automatique.
+**[S03-24]** En P0, les révisions sont toutes conservées ; aucune purge.
+Une politique de purge sera spécifiée plus tard, par révision de cette spec.
 
 Commandes de consultation (lecture seule) :
 

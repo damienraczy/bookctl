@@ -80,6 +80,7 @@ system1:
       url: TYPESAFE_URL          # nom de variable d'environnement
       api_key: TYPESAFE_API_KEY
       model: jev-latest
+      price: { input_per_mtok: 0.042, output_per_mtok: 0.0 }
       max_state_tokens: 32000
       timeout: 30
     ollama:                      # poste de développement uniquement

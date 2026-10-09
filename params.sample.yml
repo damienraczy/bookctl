@@ -1,6 +1,8 @@
 # params.sample.yml — modèle de params.yml pour bookctl
 #
 # Copié à la racine de l'espace de travail par `bookctl workspace init`.
+# `price` (dollars par million de tokens) sert à estimer les coûts ; un modèle
+# sans `price` a un coût affiché comme inconnu, jamais comme nul.
 # Aucun secret ici : `url` et `api_key` sont des NOMS de variables
 # d'environnement, définies dans ~/.env.
 # Références : specs/03-cli.md § 2.4, doc-tools/llm-cloud.md.
@@ -14,6 +16,7 @@ models:
     url: OLLAMA_CLOUD_URL
     api_key: OLLAMA_API_KEY
     timeout: 120
+    price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement, pas de facturation au token
 
   deepseek-v4-flash:
     provider: ollama
@@ -21,6 +24,7 @@ models:
     url: OLLAMA_CLOUD_URL
     api_key: OLLAMA_API_KEY
     timeout: 120
+    price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement, pas de facturation au token
 
   mistral-large-3:
     provider: ollama
@@ -28,6 +32,7 @@ models:
     url: OLLAMA_CLOUD_URL
     api_key: OLLAMA_API_KEY
     timeout: 120
+    price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement, pas de facturation au token
 
   glm-5.3-flash:
     provider: ollama
@@ -36,6 +41,7 @@ models:
     api_key: OLLAMA_API_KEY
     think: high            # low | high | max
     timeout: 720
+    price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement, pas de facturation au token
 
   gemma4:
     provider: ollama
@@ -43,6 +49,7 @@ models:
     url: OLLAMA_CLOUD_URL
     api_key: OLLAMA_API_KEY
     timeout: 120
+    price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement, pas de facturation au token
 
 ### Profils : rôle → modèle du stock
 # Rôles (specs/02-agents.md § 6 et § 11) :
@@ -83,6 +90,7 @@ system1:
       url: TYPESAFE_URL          # ex. https://api.typesafe.ai
       api_key: TYPESAFE_API_KEY
       model: jev-latest
+      price: { input_per_mtok: 0.042, output_per_mtok: 0.0 }   # tarif TypeSafe, octobre 2026
       max_state_tokens: 32000
       timeout: 30
     ollama:
