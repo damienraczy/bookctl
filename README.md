@@ -34,3 +34,16 @@ Ce dépôt ne contient **que le code et la documentation de l'outil**. Les
 manuscrits, rapports, journaux et datasets construits à partir des textes de
 l'auteur restent dans l'espace de travail local, hors dépôt
 ([`doc-tools/git.md`](doc-tools/git.md)).
+
+## Licence
+
+- **Code** : [PolyForm Noncommercial 1.0.0](LICENSE.md).
+- **Documentation et spécifications** : [CC BY-NC 4.0](LICENSE-docs.md).
+
+Distribution et modification autorisées à des fins non commerciales, à
+condition de **conserver le nom de l'auteur, Damien Raczy**, y compris dans les
+œuvres dérivées (voir [`NOTICE`](NOTICE)). **Toute utilisation commerciale
+nécessite un accord écrit préalable** de l'auteur (coordonnées dans `NOTICE`).
+
+Ce projet n'est donc pas « open source » au sens de l'OSI : son code est
+disponible et modifiable, mais pas pour un usage commercial sans accord.

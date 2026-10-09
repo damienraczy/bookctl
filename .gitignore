@@ -7,6 +7,9 @@
 !/.gitignore
 !/README.md
 !/params.sample.yml
+!/LICENSE.md
+!/LICENSE-docs.md
+!/NOTICE
 
 !/specs/
 /specs/*

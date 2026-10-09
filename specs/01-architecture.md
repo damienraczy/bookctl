@@ -71,7 +71,7 @@ le poste de développement seulement, par Ollama local (`04-primitives-system1.m
 
 ---
 
-## 2. Axe 1 — Ordre incrémental (L0 → L11)
+## 2. Axe 1 — Ordre incrémental (L0 → L10)
 
 ### 2.1 Les étapes
 
@@ -92,7 +92,7 @@ d'un espace de travail et d'un sujet est définie dans `03-cli.md` § 2 (**sourc
 de vérité**).
 
 Le format de travail est **Markdown**. PDF, EPUB et DOCX sont des cibles
-d'export (Pandoc, L11), jamais le format de rédaction.
+d'export (Pandoc, L10), jamais le format de rédaction.
 
 Les artefacts **transverses à l'outil** se répartissent ainsi :
 
@@ -203,9 +203,9 @@ utilise DSPy pour rendre System 1 fiable, puis il devient une métrique.
 
 ```
                  [ORDRE INCRÉMENTAL — le pilier, conduit par l'utilisateur]
-  L0 cadrage → L1 documentation → L2 plan directeur → L3 intentions → L4 plan détaillé
-       → L5 premier jet → L6 validation technique → L7 transitions → L8 harmonisation
-       → L9 style → L10 contrôle final → L11 assemblage
+  L0 cadrage → L1 documentation → L2 plan directeur → L3 plan détaillé
+       → L4 premier jet → L5 validation technique → L6 transitions → L7 harmonisation
+       → L8 style → L9 contrôle final → L10 assemblage
              [état versionné par bookctl + allers-retours, l'utilisateur décide]
 
                          [AXE QUALITÉ — trois étages]
@@ -225,7 +225,7 @@ utilise DSPy pour rendre System 1 fiable, puis il devient une métrique.
   rédacteur. Jamais orchestrateur, jamais persistance.
 - **Vale** : première barrière déterministe. System 1 ne la remplace pas.
 - **L'agent** : exécute une commande à la fois, lit et écrit l'état. Il
-  **n'orchestre pas** : l'utilisateur conduit la séquence L0→L11.
+  **n'orchestre pas** : l'utilisateur conduit la séquence L0→L10.
 
 ---
 

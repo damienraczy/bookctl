@@ -89,39 +89,40 @@ le système de fichiers.
 
 ---
 
-## 4. Les étapes (L0 → L11) — table de référence
+## 4. Les étapes (L0 → L10) — table de référence
 
 **Cette table est la source de vérité des étapes.** Les autres specs y
 renvoient et ne la recopient pas.
 
 | # | Étape | Action | Commande | Composant | Artefact | Gate H | System 1 (`04` § 4) | Statut |
 |---|---|---|---|---|---|---|---|---|
-| L0 | Cadrage | délimiter | `init` | Planificateur | `book/constitution.md` | — | — | |
+| L0 | Cadrage | délimiter | `init` | Planificateur | `book/constitution.md` | **H0** | — | |
 | L1 | Documentation | collecter | `collect` | Recherche | `book/research/` | — | — | *optionnel* |
 | L2 | Plan directeur | structurer | `outline` | Planificateur | `book/outline.md` | **H1** | `choice` | |
-| L3 | Intentions | assigner | `assign` | Planificateur | `book/contracts/NN.md` | — | — | |
-| L4 | Plan détaillé | décomposer | `detail` | Planificateur | `book/plans/NN.md` | **H2** | `score` | |
-| L5 | Premier jet | rédiger | `draft` | Rédacteur | `book/chapters/NN/<cible>.md` | — | `noul`, `score` | |
-| L6 | Validation technique | valider | `review` | **SME (humain)** | `book/reviews/NN.md` | **H3** | — | *optionnel* |
-| L7 | Transitions | lier | `link` | Intégrateur | raccords dans `book/chapters/` | — | — | |
-| L8 | Harmonisation | unifier | `unify` | Intégrateur | `book/chapters/` + `state/` (termes, crossrefs) | — | `noul` (lot) | |
-| L9 | Correction stylistique | polir | `polish` | Correcteur + Vale | `book/chapters/NN/<cible>.md` | **H4** | `score` | |
-| L10 | Contrôle final | verrouiller | `lock` | **System 1 + Vale + compteurs** | `reports/lock.md` | **H5** | `noul` (lot) | |
-| L11 | Assemblage | générer | `build` | **Outil (Pandoc)** | `exports/` : PDF / EPUB / DOCX | — | — | *optionnel* |
+| L3 | Plan détaillé | décomposer | `detail` | Planificateur | `book/plans/NN.md` (contrat du chapitre en en-tête + sections) | **H2** | `score` | |
+| L4 | Premier jet | rédiger | `draft` | Rédacteur | `book/chapters/NN/<cible>.md` | — | `noul`, `score` | |
+| L5 | Validation technique | valider | `review` | **SME (humain)** | `book/reviews/NN.md` | **H3** | — | *optionnel* |
+| L6 | Transitions | lier | `link` | Intégrateur | raccords dans `book/chapters/` | — | — | |
+| L7 | Harmonisation | unifier | `unify` | Intégrateur | `book/chapters/` + `state/` (termes, crossrefs) | — | `noul` (lot) | |
+| L8 | Correction stylistique | polir | `polish` | Correcteur + Vale | `book/chapters/NN/<cible>.md` | **H4** | `score` | |
+| L9 | Contrôle final | verrouiller | `lock` | **System 1 + Vale + compteurs** | `reports/lock.md` | **H5** | `noul` (lot) | |
+| L10 | Assemblage | générer | `build` | **Outil (Pandoc)** | `exports/` : PDF / EPUB / DOCX | — | — | *optionnel* |
 
 Remarques :
 
-- **L6** est une revue factuelle par un expert métier (SME) : un *checkpoint
+- **L5** est une revue factuelle par un expert métier (SME) : un *checkpoint
   humain*. La commande `review` prépare le gabarit d'annotations
   (`03-cli.md` § 3.1) ; System 1 peut pré-filtrer, pas valider le fond.
-- **L10** n'a pas d'agent LLM : la non-régression est jugée par System 1, Vale
+- **L9** n'a pas d'agent LLM : la non-régression est jugée par System 1, Vale
   et des compteurs déterministes, contre la référence enregistrée à
-  l'acceptation de L5 (`03-cli.md` § 3.2).
-- **L11** est une compilation déterministe : un *outil*, pas un agent.
-- **L8** modifie les chapitres (alignement des termes, renvois) **et** l'état
+  l'acceptation de L4 (`03-cli.md` § 3.2).
+- **L10** est une compilation déterministe : un *outil*, pas un agent.
+- **L7** modifie les chapitres (alignement des termes, renvois) **et** l'état
   éditorial (`state/concepts.yml`, `state/crossrefs.yml`). Il dépend de *tous*
   les chapitres concernés.
-- Les gates humaines sur L0 et L3 sont en discussion (§ 14).
+- **L3** commence par le **contrat du chapitre** (rôle dans le livre, apport,
+  prérequis, ce qu'il ne traite pas), puis décompose en sections. La gate H2
+  valide contrat et plan ensemble.
 
 ---
 
@@ -147,11 +148,11 @@ supplémentaire. Un agent = une responsabilité, pas une étape fine.
 
 | Agent | Étapes | Responsabilité | Rôle de modèle (`params.yml`) |
 |---|---|---|---|
-| **Planificateur** | L0, L2, L3, L4 | cadrer, structurer, assigner, décomposer | `plan` |
+| **Planificateur** | L0, L2, L3 | cadrer, structurer, décomposer | `plan` |
 | **Recherche** *(optionnel)* | L1 | collecter la matière | `plan` |
-| **Rédacteur** | L5 | rédiger le premier jet | `write` |
-| **Intégrateur** | L7, L8 | lier les transitions, unifier la cohérence | `integrate` |
-| **Correcteur** | L9 (et sur `escalate`) | polir selon les règles FR | `rewrite` |
+| **Rédacteur** | L4 | rédiger le premier jet | `write` |
+| **Intégrateur** | L6, L7 | lier les transitions, unifier la cohérence | `integrate` |
+| **Correcteur** | L8 (et sur `escalate`) | polir selon les règles FR | `rewrite` |
 
 Séparations clés :
 
@@ -173,7 +174,7 @@ Agent X
 └── critère d'acceptation : la gate (Vale / System 1 / humain)
 ```
 
-Exemple — **Rédacteur** (L5), cible `5.1` :
+Exemple — **Rédacteur** (L4), cible `5.1` :
 
 ```yaml
 entrées:
@@ -186,7 +187,7 @@ sorties:
   - reports/draft/5.1.md          # rapport : choix faits, ambiguïtés signalées
 critère_d_acceptation:
   - Vale (aucune violation de niveau error)
-  - System 1 (questions de L5, 04 § 4.2)
+  - System 1 (questions de L4, 04 § 4.2)
 ```
 
 **[S02-05]** Le contrat rend chaque agent **remplaçable et testable
@@ -235,14 +236,14 @@ périmé (manifeste) et peut être re-propagé **sans régénérer l'amont anté
 ```
 redo detail 4 --stop polish  →  re-propage draft → link → unify → polish (chapitre 4)
                               →  s'arrête à la gate H2 de detail si elle n'est pas acceptée
-                              →  NE re-propage PAS init, outline, assign
+                              →  NE re-propage PAS init, outline
 ```
 
 ---
 
 ## 10. Checkpoints humains (gates H)
 
-L'utilisateur accepte chaque artefact à son rythme. En complément, cinq **gates
+L'utilisateur accepte chaque artefact à son rythme. En complément, six **gates
 humaines obligatoires** verrouillent les points où valider à la main est
 structurel.
 
@@ -256,11 +257,12 @@ par inadvertance.
 
 | Gate | Étape | Ce que l'utilisateur valide |
 |---|---|---|
-| H1 | L2 | la table des matières (avant tout le reste) |
-| H2 | L4 | le plan détaillé d'un chapitre (avant la rédaction) |
-| H3 | L6 | la validation technique (SME, si applicable) |
-| H4 | L9 | le chapitre poli (avant le contrôle final) |
-| H5 | L10 | le livre complet |
+| H0 | L0 | la constitution : thèse, audience, périmètre, voix (avant tout le reste) |
+| H1 | L2 | la table des matières |
+| H2 | L3 | le contrat et le plan détaillé d'un chapitre (avant la rédaction) |
+| H3 | L5 | la validation technique (SME, si applicable) |
+| H4 | L8 | le chapitre poli (avant le contrôle final) |
+| H5 | L9 | le livre complet |
 
 Les autres étapes peuvent être enchaînées par script (chaque commande rend son
 verdict et son code de retour).
@@ -316,4 +318,3 @@ deux étapes ; ce choix ne conditionne pas le CLI.
 
 - Seuils de routage System 1 : à calibrer par la boucle 1 (`06-boucles-dspy.md`).
 - Granularité exacte des tranches de contexte par étape.
-- Gates humaines sur L0 (cadrage) et L3 (intentions).

@@ -166,19 +166,19 @@ on ne tronque pas.
 | Étape | Commande | Primitive | Question (gut-check) | Unité |
 |---|---|---|---|---|
 | L2 | `outline` | `choice` | « ce chapitre appartient-il à la partie A, B ou C ? » | chapitre (titre + résumé) |
-| L4 | `detail` | `score` | « ce point clé est-il au bon niveau d'abstraction ? » | point clé |
-| L5 | `draft` | `noul` | « ce passage contient-il un ternaire creux ? » | paragraphe |
-| L5 | `draft` | `score` | « densité de tics stylistiques ? » | section |
-| L8 | `unify` | `noul` (lot) | « ce concept est-il déjà défini ailleurs ? » | section |
-| L9 | `polish` | `score` | « conformité au guide stylistique ? » | section |
-| L10 | `lock` | `noul` (lot) | « la révision introduit-elle plus de tics qu'elle n'en retire ? » | section (avant / après) |
+| L3 | `detail` | `score` | « ce point clé est-il au bon niveau d'abstraction ? » | point clé |
+| L4 | `draft` | `noul` | « ce passage contient-il un ternaire creux ? » | paragraphe |
+| L4 | `draft` | `score` | « densité de tics stylistiques ? » | section |
+| L7 | `unify` | `noul` (lot) | « ce concept est-il déjà défini ailleurs ? » | section |
+| L8 | `polish` | `score` | « conformité au guide stylistique ? » | section |
+| L9 | `lock` | `noul` (lot) | « la révision introduit-elle plus de tics qu'elle n'en retire ? » | section (avant / après) |
 
-Les étapes L0, L1, L3, L6, L7, L11 n'appellent pas System 1.
+Les étapes L0, L1, L5, L6, L10 n'appellent pas System 1.
 
 ### 4.4 Le parallélisme
 
-Pour L8 et L10, on émet **plusieurs questions en un seul appel** (jusqu'à 64),
-chacune jugée en isolation contre le même `state`. Exemple L8 : une `noul` par
+Pour L7 et L9, on émet **plusieurs questions en un seul appel** (jusqu'à 64),
+chacune jugée en isolation contre le même `state`. Exemple L7 : une `noul` par
 concept de `state/concepts.yml`, « déjà défini ? », sur une section.
 
 ---

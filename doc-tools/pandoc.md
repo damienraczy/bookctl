@@ -1,8 +1,8 @@
-# Note technique — Pandoc (assemblage, L11)
+# Note technique — Pandoc (assemblage, L10)
 
 > **Outil :** [Pandoc](https://pandoc.org) — convertisseur de documents universel (John MacFarlane).
 > **Licence :** GPL-2.0-or-later. `bookctl` l'appelle comme **programme externe** (sous-processus), sans l'embarquer ni le lier.
-> **Usage dans `bookctl` :** commande `build` (L11), composant déterministe (`specs/02-agents.md` § 4).
+> **Usage dans `bookctl` :** commande `build` (L10), composant déterministe (`specs/02-agents.md` § 4).
 
 ---
 

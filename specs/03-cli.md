@@ -77,21 +77,20 @@ données personnelles (`PRINCIPES.md` § 2).
     │   ├── constitution.md       # L0 cadrage
     │   ├── research/             # L1 documentation (optionnel)
     │   ├── outline.md            # L2 plan directeur
-    │   ├── contracts/NN.md       # L3 contrats de chapitre
-    │   ├── plans/NN.md           # L4 plans détaillés
-    │   ├── chapters/NN/<cible>.md  # L5, puis L7/L8/L9 : un fichier par cible (§ 5.2)
-    │   ├── reviews/NN.md         # L6 annotations SME
+    │   ├── plans/NN.md           # L3 contrat + plan détaillé de chapitre
+    │   ├── chapters/NN/<cible>.md  # L4, puis L6/L7/L8 : un fichier par cible (§ 5.2)
+    │   ├── reviews/NN.md         # L5 annotations SME
     │   ├── style_system.md       # instruction du rédacteur (compilée par DSPy en P3)
     │   └── terminology.yml       # lexique contrôlé
     ├── state/
     │   ├── manifest.yml          # dépendances, empreintes, statuts (§ 8)
     │   ├── concepts.yml          # concepts définis, ordre d'introduction
     │   ├── crossrefs.yml         # renvois internes
-    │   ├── baseline/             # mesures de référence pour L10 (§ 3.2)
+    │   ├── baseline/             # mesures de référence pour L9 (§ 3.2)
     │   └── audit/                # journal des appels modèles (§ 9)
     ├── history/                  # révisions des artefacts (§ 8)
     ├── reports/                  # rapports d'étape (draft/, lock.md…)
-    └── exports/                  # sorties de L11
+    └── exports/                  # sorties de L10
 ```
 
 `NN` = numéro de chapitre sur deux chiffres (`03`). Les cibles (`3.2`) ne sont
@@ -187,23 +186,23 @@ bookctl --subject cuisine draft 2.1  # → cuisine, sans changer le sujet couran
 commande → composant → artefact est la table de `02-agents.md` § 4. La commande
 canonique est l'identifiant de l'étape partout, y compris dans `redo`.
 
-Commandes : `init`, `collect`, `outline`, `assign`, `detail`, `draft`,
+Commandes : `init`, `collect`, `outline`, `detail`, `draft`,
 `review`, `link`, `unify`, `polish`, `lock`, `build`.
 
-### 3.1 `review` (L6, humain)
+### 3.1 `review` (L5, humain)
 
 `review <chapitre>` crée `book/reviews/NN.md`, un gabarit d'annotations listant
 les sections du chapitre. Le SME le remplit ; `accept` clôt la revue (gate H3).
 Les annotations deviennent une entrée de `link` et `polish`.
 
-### 3.2 `lock` (L10) et sa référence
+### 3.2 `lock` (L9) et sa référence
 
-**[S03-06]** À l'`accept` d'un artefact de L5, `bookctl` enregistre ses mesures
+**[S03-06]** À l'`accept` d'un artefact de L4, `bookctl` enregistre ses mesures
 dans `state/baseline/` (violations Vale par catégorie, jugements System 1,
 nombre de mots). `lock` compare l'état poli à cette référence et rend `fail` si
 la révision introduit plus de défauts qu'elle n'en retire.
 
-### 3.3 `build` (L11)
+### 3.3 `build` (L10)
 
 Assemble les fichiers de cibles dans l'ordre de `outline.md` et appelle Pandoc
 (`doc-tools/pandoc.md`). Sortie dans `exports/`.
@@ -360,7 +359,7 @@ bookctl accept        # → accepte la dernière action
 
 ### 6.2 Gates humaines
 
-Les gates H1–H5 (`02-agents.md` § 10) s'appliquent : un artefact non accepté ne
+Les gates H0–H5 (`02-agents.md` § 10) s'appliquent : un artefact non accepté ne
 sert pas d'entrée à l'aval (code `4`), et leur `accept` exige une confirmation
 interactive.
 
@@ -463,16 +462,16 @@ bookctl workspace init
 bookctl subject new manuel-ia
 bookctl subject use manuel-ia
 
-bookctl init --instructions ~/notes/brief-these.md   # L0 cadrage
-bookctl accept
+bookctl init --instructions ~/notes/brief-these.md   # L0 cadrage, gate H0
+bookctl accept                                       # confirmation interactive
 bookctl outline                                      # L2, gate H1
 bookctl accept                                       # confirmation interactive
-bookctl detail 3                                     # L4, gate H2
+bookctl detail 3                                     # L3, gate H2
 bookctl accept
-bookctl draft 3.1                                    # L5
+bookctl draft 3.1                                    # L4
 bookctl retry 3.1 --message "préciser la distinction agent/agentif"
 bookctl accept
-bookctl polish 3.1                                   # L9
+bookctl polish 3.1                                   # L8
 
 bookctl log 3.1
 bookctl redo detail 3 --stop draft                   # refaire le plan du chapitre 3, re-rédiger

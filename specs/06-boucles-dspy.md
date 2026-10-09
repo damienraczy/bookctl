@@ -148,7 +148,7 @@ Quatre signaux, pondérés **en code** avec des coefficients de `params.yml` :
 | Signal | Mesure | Nature |
 |---|---|---|
 | Vale | violations par 1 000 mots | déterministe |
-| System 1 | non-conformité (questions de L5) | calibré |
+| System 1 | non-conformité (questions de L4) | calibré |
 | Terminologie | termes hors `terminology.yml` | déterministe |
 | **Couverture du plan** | une `noul` par point clé : « ce point est-il traité ? » | calibré |
 

@@ -35,6 +35,9 @@ Tout est ignoré, puis chaque chemin de l'outil est réautorisé explicitement :
 /doc-tools/*
 !/doc-tools/*.md
 !/params.sample.yml
+!/LICENSE.md
+!/LICENSE-docs.md
+!/NOTICE
 ```
 
 Au fil du développement, on ajoute `!/src/`, `!/tests/`, `!/prompt/`, `!/vale/`,
