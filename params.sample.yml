@@ -1,0 +1,125 @@
+# params.sample.yml — modèle de params.yml pour bookctl
+#
+# Copié à la racine de l'espace de travail par `bookctl workspace init`.
+# Aucun secret ici : `url` et `api_key` sont des NOMS de variables
+# d'environnement, définies dans ~/.env.
+# Références : specs/03-cli.md § 2.4, doc-tools/llm-cloud.md.
+
+### Stock de modèles disponibles (LLM génératifs, cloud)
+models:
+
+  deepseek-v4-pro:
+    provider: ollama
+    name: deepseek-v4-pro:cloud
+    url: OLLAMA_CLOUD_URL
+    api_key: OLLAMA_API_KEY
+    timeout: 120
+
+  deepseek-v4-flash:
+    provider: ollama
+    name: deepseek-v4.1-flash:cloud
+    url: OLLAMA_CLOUD_URL
+    api_key: OLLAMA_API_KEY
+    timeout: 120
+
+  mistral-large-3:
+    provider: ollama
+    name: mistral-large-3:675b-cloud
+    url: OLLAMA_CLOUD_URL
+    api_key: OLLAMA_API_KEY
+    timeout: 120
+
+  glm-5.3-flash:
+    provider: ollama
+    name: glm-5.3-flash:cloud
+    url: OLLAMA_CLOUD_URL
+    api_key: OLLAMA_API_KEY
+    think: high            # low | high | max
+    timeout: 720
+
+  gemma4:
+    provider: ollama
+    name: gemma4:31b-cloud
+    url: OLLAMA_CLOUD_URL
+    api_key: OLLAMA_API_KEY
+    timeout: 120
+
+### Profils : rôle → modèle du stock
+# Rôles (specs/02-agents.md § 6 et § 11) :
+#   plan      Planificateur, Recherche
+#   write     Rédacteur
+#   integrate Intégrateur
+#   rewrite   Correcteur          (≠ write)
+#   reflect   reflection_lm DSPy  (≠ write, ≠ rewrite)
+.profils:
+  mix_pro: &mix_pro
+    llm:
+      plan: deepseek-v4-pro
+      write: glm-5.3-flash
+      integrate: deepseek-v4-pro
+      rewrite: mistral-large-3
+      reflect: deepseek-v4-pro
+
+  eco: &eco
+    llm:
+      plan: deepseek-v4-flash
+      write: glm-5.3-flash
+      integrate: deepseek-v4-flash
+      rewrite: gemma4
+      reflect: deepseek-v4-pro
+
+# Profil actif
+llm_config: *mix_pro
+
+### Juge System 1 (specs/04-primitives-system1.md)
+system1:
+  enabled: false                 # P0/P1 : gate = Vale + humain
+  provider: typesafe             # typesafe (cloud) | ollama (poste de développement)
+  providers:
+    typesafe:
+      url: TYPESAFE_URL          # ex. https://api.typesafe.ai
+      api_key: TYPESAFE_API_KEY
+      model: jev-latest
+      max_state_tokens: 32000
+      timeout: 30
+    ollama:
+      url: OLLAMA_LOCAL_URL      # ex. http://localhost:11434
+      model: nimble
+      max_state_tokens: 8000
+      timeout: 60
+  retries: { max: 3, backoff_seconds: 2 }
+  routing:
+    noul_true_threshold: 0.8
+    noul_false_threshold: 0.2
+    confidence_threshold: 0.6
+
+### Gates (specs/02-agents.md § 9-10)
+gates:
+  max_retries: 3
+
+### Vale (doc-tools/vale.md)
+vale:
+  binary: vale
+  config: vale/vale.ini
+  blocking_level:
+    draft: error
+    link: error
+    polish: warning
+
+### Assemblage (doc-tools/pandoc.md)
+build:
+  pandoc: pandoc
+  formats: [epub, docx, pdf]
+  pdf_engine: xelatex
+  reference_docx: null
+  toc_depth: 3
+
+### Boucles DSPy (specs/06-boucles-dspy.md)
+dspy:
+  loop1:
+    candidate_models: [jev-latest]
+    max_metric_calls: 300
+    feedback_error_threshold: 0.5
+  loop2:
+    max_metric_calls: 300
+    weights: { vale: 1.0, terminology: 5.0, system1: 1.0, coverage: 3.0 }

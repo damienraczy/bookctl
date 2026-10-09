@@ -1,0 +1,20 @@
+# Liste blanche : tout est ignoré, puis seuls les chemins de l'outil
+# sont réautorisés explicitement (specs/PRINCIPES.md § 2, doc-tools/git.md).
+# Ajouter un chemin ici est une décision volontaire.
+
+/*
+
+!/.gitignore
+!/README.md
+!/params.sample.yml
+
+!/specs/
+/specs/*
+!/specs/*.md
+
+!/doc-tools/
+/doc-tools/*
+!/doc-tools/*.md
+
+# Fichiers système, même dans les chemins autorisés
+.DS_Store
