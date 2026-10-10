@@ -1,0 +1,87 @@
+# Paramètres du spike S1 (aucun secret : noms de variables d'environnement seulement)
+
+model: tev1:4b
+base_url: OLLAMA_LOCAL_URL          # variable d'env. → ex. http://localhost:11434
+endpoint: /v1/systemone
+http_timeout: 120                   # secondes
+output_dir: out
+
+state_dir: state                    # state/<nom>.md
+
+cold:
+  repeats: 3
+
+warm:
+  repeats: 10
+
+# Questions disponibles ; une configuration en prend les `questions` premières
+# ou celles de `primitive`.
+questions:
+  ternaire:
+    type: noul
+    instructions: Le passage contient-il une énumération en trois termes sans contenu ?
+  tics:
+    type: score
+    instructions: Quelle est la densité de tics stylistiques du passage ?
+    criteria: [Aucun, Faible, Modéré, Élevé]
+  registre:
+    type: choice
+    instructions: Quel est le registre dominant du passage ?
+    criteria: {A: Technique, B: Pédagogique, C: Narratif, D: Promotionnel}
+  jargon:
+    type: noul
+    instructions: Le passage emploie-t-il un terme technique sans le définir ?
+  passif:
+    type: noul
+    instructions: Le passage abuse-t-il de la voix passive ?
+  redondance:
+    type: noul
+    instructions: Le passage répète-t-il une même idée sans l'enrichir ?
+  clarte:
+    type: score
+    instructions: Quelle est la clarté du passage pour un lecteur non spécialiste ?
+    criteria: [Obscur, Difficile, Correct, Clair]
+  emphase:
+    type: noul
+    instructions: Le passage contient-il des formules d'emphase creuses (« il convient de souligner »…) ?
+  connecteurs:
+    type: noul
+    instructions: Les connecteurs logiques sont-ils employés à contresens ?
+  exemples:
+    type: noul
+    instructions: Le passage illustre-t-il ses affirmations par un exemple ?
+  longueur:
+    type: score
+    instructions: Quelle est la longueur moyenne des phrases ?
+    criteria: [Courte, Moyenne, Longue, Très longue]
+  promesse:
+    type: noul
+    instructions: Le passage annonce-t-il un contenu qu'il ne traite pas ?
+  anglicismes:
+    type: noul
+    instructions: Le passage contient-il des anglicismes évitables ?
+  public:
+    type: choice
+    instructions: À quel public le passage s'adresse-t-il ?
+    criteria: {A: Débutant, B: Intermédiaire, C: Expert}
+  coherence:
+    type: noul
+    instructions: Le passage contient-il une contradiction interne ?
+  conclusion:
+    type: noul
+    instructions: Le passage se termine-t-il par une phrase de conclusion générique ?
+
+# Configurations mesurées à chaud.
+#   state : fichier de state/ ; state_repeat : nombre de copies concaténées
+#   questions : nombre de questions prises dans l'ordre ; primitive : une seule question de ce nom
+#   cache : true → state identique à chaque appel ; false → préfixe unique
+configs:
+  - {name: noul_court,        state: court, primitive: ternaire,  cache: false}
+  - {name: score_court,       state: court, primitive: tics,      cache: false}
+  - {name: choice_court,      state: court, primitive: registre,  cache: false}
+  - {name: noul_moyen,        state: moyen, primitive: ternaire,  cache: false}
+  - {name: noul_long,         state: moyen, state_repeat: 3, primitive: ternaire, cache: false}
+  - {name: noul_hors_limite,  state: moyen, state_repeat: 6, primitive: ternaire, cache: false}
+  - {name: q4_moyen,          state: moyen, questions: 4,  cache: false}
+  - {name: q16_moyen,         state: moyen, questions: 16, cache: false}
+  - {name: q4_moyen_cache,    state: moyen, questions: 4,  cache: true}

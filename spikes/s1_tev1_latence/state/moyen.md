@@ -1,0 +1,9 @@
+Un journal d'événements enregistre, dans l'ordre où elles se produisent, les actions effectuées par un programme. Chaque entrée porte au minimum un horodatage, un niveau de gravité et un message. Le niveau de gravité permet de filtrer : en production, on conserve en général les avertissements et les erreurs ; pendant le développement, on active aussi les messages de diagnostic.
+
+Le format compte autant que le contenu. Un message rédigé en texte libre se lit facilement à l'écran, mais se prête mal à l'analyse automatique. Un message structuré, par exemple une ligne JSON par événement, se traite sans effort par des outils de recherche et de statistiques. Le choix dépend donc de qui lira le journal : une personne qui suit un incident en direct, ou un programme qui agrège des milliers d'entrées.
+
+Prenons un exemple. Une application reçoit une requête, interroge une base de données, puis renvoie une réponse. Si la base met trois secondes à répondre, le journal doit permettre de le constater sans relancer l'application. Il suffit pour cela d'enregistrer la durée de chaque requête à la base, avec un identifiant commun à toutes les entrées de la même requête. On reconstitue alors le parcours complet d'une demande, de l'arrivée à la réponse.
+
+Deux erreurs reviennent souvent. La première consiste à tout journaliser : le volume devient tel que les informations utiles se perdent, et le coût de stockage augmente. La seconde consiste à journaliser des données sensibles, comme des mots de passe ou des numéros de carte, qui se retrouvent alors lisibles par toute personne ayant accès aux fichiers. Une règle simple évite les deux : décider, pour chaque événement, qui en aura besoin et pour quoi faire.
+
+Enfin, un journal n'est utile que s'il est conservé assez longtemps pour être consulté, et pas plus longtemps que nécessaire. La durée de conservation se fixe à l'avance, selon les besoins de diagnostic et les obligations légales.

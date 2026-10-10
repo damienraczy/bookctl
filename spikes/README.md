@@ -24,3 +24,4 @@ phase S).
 | Id | Dossier | Question |
 |---|---|---|
 | B5 | `b5_ollama_dspy/` | Comment appeler les modèles Ollama Cloud depuis DSPy (noms, voie d'accès, `think`) ? |
+| S1 | `s1_tev1_latence/` | Quel temps de réaction pour Tev1 4B en Ollama local, selon la taille du `state` et le nombre de questions ? |

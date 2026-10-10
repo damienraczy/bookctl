@@ -172,18 +172,48 @@ ligne. Pas d'usage en exécution.
 | **Clef** | Cloudflare | Qwen3.8-27B | 27B (18 Go) | Apache 2.0 | 64k annoncé dans les points forts (256k dans la liste des tags) | texte + image ; Ollama ≥ 0.35.1 |
 | **Clef-flash** | Cloudflare | Qwen3.5-9B | 9B | Apache 2.0 | — | le plus rapide mesuré |
 | **Nimble** | Bespoke Labs | Qwen3.5-9B | 9B (9,3–9,5 Go) | Apache 2.0 | **8 192 tokens** (les tags annoncent 256k, les notes 8k) | < 100 ms sur MacBook Pro M5 Max |
-| **Tev1** | Together AI | Qwen3.5 | 4B (4,4 Go), 0.8B (≈ 800 Mo) | MIT pour les scripts d'entraînement et le dataset ; licence des poids non précisée sur la page | **≈ 2 000 tokens** (notes de la page) | `choice` entraîné sur 2 à 24 options |
+| **Tev1** | Together AI | Qwen3.5 | 4B (4,4 Go), 0.8B (≈ 800 Mo) | MIT pour les scripts d'entraînement et le dataset ; licence des poids non précisée sur la page | **2 048 tokens par question** (mesuré, § 3.2.1) | `choice` entraîné sur 2 à 24 options |
 
 Limites communes Ollama : 64 questions par appel, 26 options ou niveaux au
 maximum, requête ≤ 64 Kio. Pas de clé d'API en local.
 
-**Point d'attention** : le contexte effectif de Tev1 (≈ 2k tokens) et de Nimble
+#### 3.2.1 Mesures : Tev1 4B
+
+Spike `spikes/s1_tev1_latence`, 10 octobre 2026 : Apple M2 Pro, 16 Gio, Ollama
+0.40.2, `tev1:4b` (mxfp8, moteur MLX, `num_ctx` 2048, `temperature` 0). Durée
+côté client, médiane de 10 appels, modèle chargé sauf mention.
+
+| Situation | Tokens d'entrée | Médiane |
+|---|---|---|
+| Premier appel, modèle déchargé (1 `noul`, phrase) | ≈ 140 | 1,4 à 3 s (selon les passages) |
+| 1 `noul`, phrase | ≈ 140 | 0,26 s |
+| 1 `score` (4 niveaux) ou 1 `choice` (4 options), phrase | ≈ 180 | 0,43 à 0,45 s |
+| 1 `noul`, texte d'environ 450 tokens | ≈ 550 | 1,4 s |
+| 1 `noul`, texte d'environ 1 300 tokens | ≈ 1 400 | 3,8 s |
+| 4 questions, texte d'environ 450 tokens | ≈ 2 280 | 2,4 s |
+| 16 questions, texte d'environ 450 tokens | ≈ 9 000 | 5,7 s |
+| 4 questions, même requête répétée à l'identique | ≈ 2 250 (tout en cache) | 0,04 s |
+
+- **La durée suit la taille du `state`** : environ 2,7 ms par token d'entrée sur
+  ce poste. La primitive pèse peu.
+- **Chaque question relit le `state`** : les tokens d'entrée sont multipliés
+  par le nombre de questions. Ollama réutilise le préfixe commun entre les
+  questions d'une même requête, d'où un surcoût d'environ 0,3 s par question
+  supplémentaire au lieu d'une relecture complète.
+- **Limite stricte** : `state`, question et gabarit doivent tenir dans 2 048
+  tokens **par question**. Au-delà, Ollama répond `400` (« prompt 0 has 2716
+  tokens; expected 1–2048 (input is never truncated) ») : aucune troncature
+  silencieuse. Le `state` utile plafonne donc à environ 1 900 tokens.
+- **Répéter une requête identique** ne coûte presque rien (cache) : utile pour
+  itérer sur la formulation d'une question, trompeur pour mesurer.
+
+**Point d'attention** : le contexte effectif de Tev1 (2 048 tokens) et de Nimble
 (8k) **interdit** de juger une section longue ou un chapitre en une requête. Ces
 modèles ne conviennent qu'aux unités courtes (phrase, paragraphe).
 
-**Matériel** : non documenté par les pages. Un modèle de 9 Go demande au moins
-autant de mémoire libre (GPU ou mémoire unifiée). À mesurer sur le poste avant
-de retenir cette option.
+**Matériel** : non documenté par les pages. Tev1 4B tourne sur un M2 Pro de
+16 Gio (§ 3.2.1). Un modèle de 9 Go demande au moins autant de mémoire libre
+(GPU ou mémoire unifiée) : à mesurer sur le poste avant de le retenir.
 
 ### 3.3 Option C — Ollama Cloud : **non disponible**
 
