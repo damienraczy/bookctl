@@ -185,7 +185,7 @@ côté client, médiane de 10 appels, modèle chargé sauf mention.
 
 | Situation | Tokens d'entrée | Médiane |
 |---|---|---|
-| Premier appel, modèle déchargé (1 `noul`, phrase) | ≈ 140 | 1,4 à 3 s (selon les passages) |
+| Premier appel, modèle déchargé (1 `noul`, phrase) | ≈ 140 | 1,4 à 4,2 s (deux passages de 3 appels) |
 | 1 `noul`, phrase | ≈ 140 | 0,26 s |
 | 1 `score` (4 niveaux) ou 1 `choice` (4 options), phrase | ≈ 180 | 0,43 à 0,45 s |
 | 1 `noul`, texte d'environ 450 tokens | ≈ 550 | 1,4 s |
