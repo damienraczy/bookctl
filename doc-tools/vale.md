@@ -39,7 +39,7 @@ est **couplé à System 1**, qui juge le motif en contexte
 | Force | Détail |
 | --- | --- |
 | **Binaire Go unique, hors ligne** | démarrage à froid ~156 ms (page de 2 Ko, mesure communautaire) |
-| **Performance** | cas GitLab : 2 826 pages Markdown, 82 règles, 19,5 s ; largement suffisant pour un livre |
+| **Performance** | cas GitLab : 2 826 pages Markdown, 82 règles, 19,5 s ; largement suffisant pour un ouvrage long |
 | **Hunspell intégré** | dictionnaires LibreOffice `fr_FR` pris en charge depuis la v3 (bug de flag long corrigé) |
 | **LSP** | `vale-ls` : diagnostics dans l'éditeur pendant la relecture manuelle |
 | **Sortie JSON** | `--output=JSON`, lue par `bookctl` pour construire le verdict |

@@ -19,10 +19,10 @@ régénérables.
 
 | Format | Commande type | Prérequis |
 |---|---|---|
-| **EPUB** | `pandoc … -o livre.epub` | aucun |
-| **DOCX** | `pandoc … -o livre.docx --reference-doc=modele.docx` | un document de référence pour les styles (optionnel) |
-| **PDF** | `pandoc … -o livre.pdf --pdf-engine=<moteur>` | un moteur : LaTeX (`xelatex`, `lualatex`) ou `typst` |
-| **HTML** | `pandoc … -s -o livre.html` | aucun |
+| **EPUB** | `pandoc … -o ouvrage.epub` | aucun |
+| **DOCX** | `pandoc … -o ouvrage.docx --reference-doc=modele.docx` | un document de référence pour les styles (optionnel) |
+| **PDF** | `pandoc … -o ouvrage.pdf --pdf-engine=<moteur>` | un moteur : LaTeX (`xelatex`, `lualatex`) ou `typst` |
+| **HTML** | `pandoc … -s -o ouvrage.html` | aucun |
 
 Pour le PDF en français, `xelatex` ou `lualatex` (Unicode, polices système) ;
 `typst` est plus léger à installer. Le moteur est un paramètre de `params.yml`.

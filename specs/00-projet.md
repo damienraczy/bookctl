@@ -11,16 +11,13 @@
 
 ## 1. En une phrase
 
-`bookctl` est un outil en ligne de commande qui aide un auteur à **rédiger un
-manuel technique en français avec des LLM**, étape par étape, en gardant
-**l'auteur aux commandes** et en **mesurant la qualité** du texte à chaque
-étape.
+`bookctl` est un outil en ligne de commande qui aide un auteur à rédiger des documents longs en français (manuels techniques, essais, guides méthodologiques, et autres documents longs structurés) à l’aide de modèles de langage. Il structure l’écriture étape par étape, maintient l’auteur aux commandes du processus et mesure la qualité du texte produit à chaque étape.
 
 ---
 
 ## 2. Le problème
 
-Écrire un manuel technique avec un LLM pose trois difficultés.
+Écrire un document long et structuré avec un LLM pose trois difficultés.
 
 1. **Générer d'un bloc dégrade le texte.** Demandé en une fois, un chapitre
    accumule des défauts typiques : répétitions, concepts définis plusieurs fois,
@@ -43,11 +40,11 @@ Trois axes, par ordre de priorité.
 
 ### 3.1 Axe 1 — L'ordre de travail
 
-Le livre est produit **par étapes successives**, chacune reposant sur la
+L'ouvrage est produit **par étapes successives**, chacune reposant sur la
 précédente : cadrage, plan, plan détaillé de chaque chapitre, premier jet
 section par section, transitions, harmonisation, correction stylistique,
 contrôle final, assemblage. À chaque étape, le modèle ne reçoit qu'un **extrait**
-de l'étape supérieure, jamais le livre entier. Chaque étape produit un fichier
+de l'étape supérieure, jamais l'ouvrage entier. Chaque étape produit un fichier
 que l'auteur peut relire, corriger et faire refaire, sans régénérer ce qui
 précède.
 
@@ -76,11 +73,11 @@ puis seulement l'utiliser pour optimiser les instructions du rédacteur.
 
 | Profil | Rôle dans `bookctl` |
 |---|---|
-| **Auteur** d'un manuel technique en français | conduit chaque étape, valide les points de contrôle, décide de tout |
+| **Auteur** d'un document long et structuré, premièrement en français | conduit chaque étape, valide les points de contrôle, décide de tout |
 | **Expert métier** (SME), facultatif | relit le fond d'un chapitre et l'annote |
 | **Développeur** de l'outil | fait évoluer le code, les prompts, les règles et la calibration |
 
-`bookctl` est un **outil d'auteur**, pas un générateur de livres en un clic.
+`bookctl` est un **outil d'auteur**, pas un générateur d'ouvrages en un clic.
 
 ---
 
@@ -88,7 +85,7 @@ puis seulement l'utiliser pour optimiser les instructions du rédacteur.
 
 ### 5.1 Ce que fait `bookctl`
 
-- organiser un livre en **sujets** (une œuvre = un sujet) dans un **espace de
+- organiser le travail en **sujets** (un ouvrage = un sujet) dans un **espace de
   travail** local ;
 - exécuter chaque étape de rédaction sur commande, sur une cible précise
   (chapitre, section, sous-section) ;
@@ -97,16 +94,16 @@ puis seulement l'utiliser pour optimiser les instructions du rédacteur.
 - garder l'**historique** de chaque artefact et savoir ce qui doit être refait
   quand un artefact amont change ;
 - **journaliser** chaque appel de modèle (traçabilité) ;
-- assembler le livre en EPUB, DOCX et PDF.
+- assembler l'ouvrage en EPUB, DOCX et PDF.
 
 ### 5.2 Ce que `bookctl` ne fait pas
 
-- **Écrire le livre seul.** Aucune commande n'enchaîne les étapes de
+- **Écrire l'ouvrage seul.** Aucune commande n'enchaîne les étapes de
   elle-même ; aucun agent ne décide à la place de l'auteur.
-- **Valider le fond.** L'exactitude technique relève de l'auteur et de
+- **Valider le fond.** L'exactitude conceptuelle et technique relève de l'auteur et de
   l'expert métier.
 - **Faire de la fiction.** Le cadre (plan, contrats de chapitre, terminologie
-  contrôlée, renvois) est celui de la non-fiction technique.
+  contrôlée, renvois) est celui de documents longs non-fiction.
 - **Faire tourner des LLM en local.** Les LLM sont appelés dans le cloud.
 - **Publier.** Il produit des fichiers d'export ; la diffusion est hors
   périmètre.
@@ -121,7 +118,7 @@ commandes.
 1. **Créer le sujet** : `bookctl subject new manuel-ia`, puis
    `bookctl subject use manuel-ia`.
 2. **Cadrer** : `bookctl init --instructions brief.md` produit la constitution
-   du livre (thèse, audience, périmètre, voix). L'auteur la relit, la corrige
+   de l'ouvrage (thèse, audience, périmètre, voix). L'auteur la relit, la corrige
    au besoin et l'**accepte** : c'est un point de contrôle obligatoire.
 3. **Structurer** : `bookctl outline` produit la table des matières, acceptée
    à son tour.
@@ -136,7 +133,7 @@ commandes.
    chapitre.
 8. **Contrôler** : `bookctl lock` vérifie que la correction n'a pas dégradé le
    texte et fait chercher par un Auditeur les problèmes d'ensemble ; seuls les
-   constats confirmés par System 1 comptent. L'auteur valide le livre complet.
+   constats confirmés par System 1 comptent. L'auteur valide l'ouvrage complet.
 9. **Assembler** : `bookctl build` produit EPUB, DOCX et PDF.
 
 À tout moment, `bookctl redo` refait une étape amont (par exemple le plan d'un
@@ -150,7 +147,7 @@ chapitre) ; ce qui en dépend est signalé comme à refaire.
 |---|---|
 | **L'auteur conduit** | une commande = une étape sur une cible ; six points de contrôle humains obligatoires |
 | **Le fichier est le message** | les agents ne se parlent pas ; ils lisent et écrivent des fichiers texte |
-| **Extrait, jamais le tout** | chaque agent reçoit une tranche définie du livre |
+| **Extrait, jamais le tout** | chaque agent reçoit une tranche définie de l'ouvrage |
 | **Aucun modèle ne juge son propre texte** | rédacteur, correcteur, auditeur, juge et optimiseur sont des modèles distincts |
 | **Mesurer plutôt que croire** | chaque production a un verdict ; la qualité se suit par des indicateurs |
 | **Échouer explicitement** | aucune valeur par défaut silencieuse, aucun repli caché |
@@ -192,7 +189,7 @@ Le socle de développement (TDD, paramètres, secrets, documentation) est dans
 
 **Hypothèse centrale** : produire par étapes donne un meilleur texte que
 générer d'un bloc. Elle est **vérifiée en premier**, sur deux chapitres d'un
-livre pilote, avant d'écrire le code qui en dépend.
+ouvrage pilote, avant d'écrire le code qui en dépend.
 
 **Risques principaux** :
 
@@ -201,7 +198,7 @@ livre pilote, avant d'écrire le code qui en dépend.
 - l'écosystème System 1 et les API de DSPy et GEPA évoluent vite ;
 - le pipeline complet est ambitieux pour une petite équipe.
 
-D'où un ordre de réalisation qui livre un livre **sans dépendre** des parties
+D'où un ordre de réalisation qui livre un ouvrage **sans dépendre** des parties
 risquées : System 1 et les boucles DSPy améliorent le résultat, ils ne le
 conditionnent pas.
 
@@ -225,7 +222,8 @@ pipeline complet, calibration, boucles d'optimisation) est dans
 | Terme | Définition |
 |---|---|
 | **Espace de travail** | répertoire local où l'auteur se place ; contient `params.yml`, `config.yml` et les sujets |
-| **Sujet** | une œuvre (un livre), désignée par son nom |
+| **Ouvrage** | document long et structuré, non-fiction : manuel technique, documentation, essai, guide méthodologique… |
+| **Sujet** | un ouvrage, désigné par son nom |
 | **Étape** (L0 à L10) | une primitive de rédaction, invoquée par une commande (`init`, `draft`…) |
 | **Cible** | ce sur quoi porte une commande : chapitre `3`, section `3.2`, sous-section `3.2.1`, ou plage `3..5` |
 | **Artefact** | fichier produit par une étape (constitution, plan, section…) |
@@ -233,14 +231,14 @@ pipeline complet, calibration, boucles d'optimisation) est dans
 | **Verdict** | résultat de la gate : `pass`, `fail` ou `escalate` |
 | **Décision** | choix de l'auteur après un verdict : `accept`, `retry`, `resume`, `redo` |
 | **Gate humaine** (H0 à H5) | point de contrôle où l'acceptation explicite de l'auteur est obligatoire |
-| **Constitution** | thèse, audience, périmètre et voix du livre (étape L0) |
+| **Constitution** | thèse, audience, périmètre et voix de l'ouvrage (étape L0) |
 | **Contrat de chapitre** | rôle, apport, prérequis et limites d'un chapitre, en tête de son plan détaillé |
 | **System 1** | modèle de décision qui répond à des questions typées par des probabilités, sans générer de texte |
 | **Calibration** | accord entre les probabilités annoncées par le juge et la réalité observée |
 | **Escalade** | verdict rendu quand le juge n'est pas assez sûr : l'auteur tranche |
 | **Auditeur** | agent LLM du contrôle final qui propose des constats ; System 1 les confirme ou non |
 | **Périmé** (`stale`) | artefact dont une entrée a changé depuis sa production, à refaire ou reprendre |
-| **Sujet pilote** | livre réel sur lequel le projet est conduit et évalué |
+| **Sujet pilote** | ouvrage réel sur lequel le projet est conduit et évalué |
 
 ---
 

@@ -69,7 +69,7 @@ Exemple : `feat(cli): [S03-05] [GREEN] résolution du sujet par --subject`.
 - Le `.gitignore` fonctionne **par liste blanche** : tout est ignoré (`/*`), puis seuls les chemins de l'outil sont réautorisés explicitement. Un nouveau dossier n'entre dans git que par une ligne ajoutée volontairement au `.gitignore`.
 - Un test vérifie que les dossiers d'un sujet (`book/`, `state/`, `reports/`, `history/`) et `params.yml` sont ignorés.
 - Le versionnement des artefacts d'un sujet est assuré par `bookctl` lui-même (`03-cli.md` § 8), pas par git.
-- les documents archivés, les anciennes versions et les documents des dossier `old`ne sont pas archivés
+- les documents archivés, les anciennes versions et les documents des dossier `old` ne sont pas archivés
 ---
 
 ## 3. Identifiants d'exigences

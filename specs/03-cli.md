@@ -108,7 +108,7 @@ Rôles des deux fichiers racine :
 
 ### 2.3 Gestion des sujets
 
-Un **sujet** est une œuvre distincte (`manuel-ia`, `cuisine`), désignée **par
+Un **sujet** est un ouvrage distinct (`manuel-ia`, `cuisine`), désigné **par
 son nom**. Aucun état n'est partagé entre sujets.
 
 | Commande | Effet |
@@ -219,7 +219,7 @@ nombre de mots). C'est la référence de la non-régression.
 qu'elle n'en retire par rapport à la référence, ou si un constat est confirmé.
 
 **[S03-22]** Sans cible, `lock` traite tous les chapitres puis écrit la
-synthèse `reports/lock.md`, qui est l'artefact de la gate H5 (le livre
+synthèse `reports/lock.md`, qui est l'artefact de la gate H5 (l'ouvrage
 complet).
 
 Le rapport d'un chapitre a toujours la même structure :
