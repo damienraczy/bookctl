@@ -27,7 +27,7 @@ système n'est **jamais** exécuté en boîte noire par un agent qui décide seu
 Trois règles structurelles :
 
 1. **[S02-01] Une commande = une primitive, appliquée à une cible explicite.**
-   Jamais de « génère l'ouvrage ». `draft 4.2` rédige la section 4.2. Une cible
+   Jamais de « génère le manuel ». `draft 4.2` rédige la section 4.2. Une cible
    chapitre ou plage (`draft 4`, `draft 1..3`) exécute la **même** primitive
    sur chaque section visée, une par une, avec un verdict par section
    (`03-cli.md` § 5.5). Une commande n'enchaîne jamais deux étapes différentes.
@@ -122,7 +122,7 @@ Remarques :
 - **L7** modifie les chapitres (alignement des termes, renvois) **et** l'état
   éditorial (`state/concepts.yml`, `state/crossrefs.yml`). Il dépend de *tous*
   les chapitres concernés.
-- **L3** commence par le **contrat du chapitre** (rôle dans l'ouvrage, apport,
+- **L3** commence par le **contrat du chapitre** (rôle dans le livre, apport,
   prérequis, ce qu'il ne traite pas), puis décompose en sections. La gate H2
   valide contrat et plan ensemble.
 
@@ -176,7 +176,7 @@ D'où la règle : **l'Auditeur propose, System 1 dispose.**
 
 - **[S02-12]** L'Auditeur lit, pour un chapitre : la constitution, l'outline,
   le contrat et le plan du chapitre, le chapitre poli et `state/concepts.yml`.
-  Jamais l'ouvrage entier.
+  Jamais le livre entier.
 - **[S02-13]** Il produit une liste de **constats typés et localisés** :
   `catégorie` (liste fermée, `04-primitives-system1.md` § 4.5), `cible`,
   `passage` cité, `référence` citée (phrase de la constitution, point du plan,
@@ -200,7 +200,7 @@ Chaque agent est défini par un **contrat** à trois champs :
 
 ```
 Agent X
-├── entrées        : fichiers à lire + tranche exacte (jamais l'ouvrage entier)
+├── entrées        : fichiers à lire + tranche exacte (jamais le livre entier)
 ├── sorties        : artefact écrit + rapport (ce qui a été fait, ce qui reste)
 └── critère d'acceptation : la gate (Vale / System 1 / humain)
 ```
@@ -315,7 +315,7 @@ par inadvertance.
 | H2 | L3 | le contrat et le plan détaillé d'un chapitre (avant la rédaction) |
 | H3 | L5 | la validation technique (SME, si applicable) |
 | H4 | L8 | le chapitre poli (avant le contrôle final) |
-| H5 | L9 | l'ouvrage complet |
+| H5 | L9 | le livre complet |
 
 Les autres étapes peuvent être enchaînées par script (chaque commande rend son
 verdict et son code de retour).

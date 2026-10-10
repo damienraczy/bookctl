@@ -13,8 +13,8 @@ Deux constats fondent le projet :
 
 1. **Aucun outil existant ne fait le travail** clé en main. Les briques existent
    (génération, optimisation de prompts, linter), mais leur assemblage pour de la
-   documents longs et structurés **en français** (manuels, documentation, essais,
-   guides) n'est livré nulle part.
+   documents longs et structurés non-fiction **en français** n'est livré nulle
+   part.
 2. **Le maillon manquant est l'ordre de travail**, plus que le prompt ou les
    contraintes. Générer un chapitre d'un bloc (one-shot) oblige le modèle à
    maintenir trop d'états en interne et produit les défauts classiques :
@@ -42,12 +42,12 @@ versionnement des artefacts est assuré par `bookctl` (historique de révisions 
 manifeste, `03-cli.md` § 8), **pas par git** : les travaux de rédaction sont des
 données personnelles et n'entrent pas dans le dépôt (`PRINCIPES.md` § 2).
 System 1, DSPy et Vale sont des composants branchés sur cet état. Aucun
-composant ne détient seul la cohérence de l'ouvrage.
+composant ne détient seul la cohérence du livre.
 
 ### 1.2 Le contexte descendu est toujours un extrait dérivé
 
 À chaque étape, le modèle reçoit une **tranche** de l'étage supérieur, jamais
-« l'ouvrage entier ». Le contexte transmis à la rédaction d'une section est
+« le livre entier ». Le contexte transmis à la rédaction d'une section est
 l'extrait du plan détaillé qui la concerne, pas le manuscrit en cours.
 
 ### 1.3 Chaque étage est un point de reprise corrigible
@@ -84,7 +84,7 @@ La table des étapes (action, commande, composant, artefact, gate humaine,
 primitive System 1) a une **source de vérité unique** : `02-agents.md` § 4.
 
 La granularité de contexte de chaque étape est l'extrait dérivé de l'étape
-supérieure, jamais « l'ouvrage entier ».
+supérieure, jamais « le livre entier ».
 
 ### 2.2 Format d'état entre étapes
 
@@ -252,8 +252,8 @@ décision est écrit avant de commencer.
 | **P2** | Spike **B3** (adaptateur GEPA), puis boucle 1 ; System 1 branché dans les gates | calibration mesurable | juge calibré, taux d'escalade supportable |
 | **P3** | Boucle 2 (optionnelle) | juge calibré et taux de réécriture encore jugé trop élevé | `style_system.md` compilé |
 
-Le chemin S → P0 → P0+ produit l'ouvrage. P1 → P3 améliorent la qualité et
-l'automatisation, sans jamais conditionner la sortie de l'ouvrage.
+Le chemin S → P0 → P0+ produit le livre. P1 → P3 améliorent la qualité et
+l'automatisation, sans jamais conditionner la sortie du livre.
 
 ## 8. Indicateurs
 

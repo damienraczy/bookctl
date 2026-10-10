@@ -134,7 +134,7 @@ Le Rédacteur est déjà un module DSPy (`02-agents.md` § 12) :
 
 ```python
 class WriteSection(dspy.Signature):
-    """Rédige une section d'un ouvrage en français, conforme au guide stylistique."""
+    """Rédige une section en français, conforme au guide stylistique."""
     plan: str = dspy.InputField(desc="Tranche du plan détaillé de la section")
     terminology: str = dspy.InputField(desc="Lexique contrôlé")
     concepts: str = dspy.InputField(desc="Concepts déjà introduits (à ne pas redéfinir)")

@@ -1,17 +1,17 @@
 # bookctl
 
-Outil en ligne de commande pour rédiger des ouvrages longs et structurés en
-français (manuels techniques, documentation, essais, guides méthodologiques…),
-étape par étape, avec des LLM dans le cloud, sous le contrôle permanent de l'auteur.
+Outil en ligne de commande pour rédiger des documents longs et structurés en
+français (livres, manuels techniques, documentation, essais, guides
+méthodologiques…), étape par étape, avec des LLM dans le cloud, sous le contrôle permanent de l'auteur.
 
 > **Statut :** spécifications v1.0 (finalisées le 9 octobre 2026). Pas encore de code.
 
 ## Principe
 
-- **L'ordre de travail fait la qualité.** L'ouvrage est produit de façon
+- **L'ordre de travail fait la qualité.** Le livre est produit de façon
   incrémentale (cadrage → plan → plan détaillé → premier jet → transitions →
   harmonisation → style → contrôle final → assemblage), chaque étape recevant un
-  extrait de l'étape supérieure, jamais l'ouvrage entier.
+  extrait de l'étape supérieure, jamais le livre entier.
 - **L'auteur conduit.** Une commande `bookctl` = une étape sur une cible
   explicite. Aucun agent n'enchaîne les étapes de lui-même.
 - **Chaîne qualité à trois étages.** Vale (motifs codés) → System 1 (jugement

@@ -151,7 +151,7 @@ GEPA fonctionne dès 3 exemples ; 30 à 300 sont recommandés.
 Shopify, Databricks, Nubank, Dropbox, Google ADK, Microsoft (cités par la doc
 GEPA), tutoriels DSPy à visée stylistique (haïku, dialogues), notation de
 rédactions par grille. Aucun cas publié d'optimisation de guide stylistique
-pour un ouvrage long en français.
+pour un document long en français.
 
 ---
 
