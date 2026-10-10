@@ -1,4 +1,4 @@
-"""Spike S1 : temps de réaction de Tev1 4B servi par Ollama local.
+"""Spike S1 : temps de réaction des modèles System 1 servis par Ollama local.
 
 Mesure la durée des appels ``/v1/systemone`` à froid (modèle déchargé) puis à
 chaud, selon la primitive, la taille du ``state``, le nombre de questions et
@@ -292,11 +292,16 @@ def environment(client: Any, base: str, model: str) -> dict[str, Any]:
             "parametres": " ; ".join((show.get("parameters") or "").split("\n"))}
 
 
-def run() -> Path:
-    """Exécute l'essai et écrit les rapports.
+def report_stem(model: str, stamp: str) -> str:
+    """Nom de fichier des rapports d'un modèle (``:`` et ``/`` remplacés par ``-``)."""
+    return f"s1_{model.replace(':', '-').replace('/', '-')}_{stamp}"
+
+
+def run() -> list[Path]:
+    """Exécute l'essai pour chaque modèle de ``models`` et écrit les rapports.
 
     Returns:
-        Chemin du rapport Markdown.
+        Chemins des rapports Markdown, un par modèle.
 
     Raises:
         ConfigError: configuration invalide.
@@ -305,7 +310,9 @@ def run() -> Path:
 
     load_dotenv(os.path.expanduser("~/.env"), override=True)
     params = load_yaml(PARAMS_FILE)
-    model = require_key(params, "model")
+    models = require_key(params, "models")
+    if not isinstance(models, list) or not models:
+        raise ConfigError("`models` doit être une liste non vide")
     base = require_env(require_key(params, "base_url")).rstrip("/")
     url = base + require_key(params, "endpoint")
     all_questions = require_key(params, "questions")
@@ -321,33 +328,61 @@ def run() -> Path:
             raise ConfigError(f"State introuvable : {path}")
         prepared.append((config, path.read_text(encoding="utf-8"), select_questions(all_questions, config)))
 
-    results: list[CallResult] = []
-    with httpx.Client(timeout=require_key(params, "http_timeout")) as client:
-        meta = environment(client, base, model)
-        first_config, first_text, first_questions = prepared[0]
-        for i in range(cold_repeats):
-            unload(client, base, model)
-            results.append(call(client, url, model, build_state(first_text, 1, False, f"froid-{i}"), first_questions, "froid", i))
-            print(f"froid {i}: {results[-1].latency_s:.2f} s", file=sys.stderr)
-        for config, text, questions in prepared:
-            repeat, cache = config.get("state_repeat", 1), require_key(config, "cache")
-            call(client, url, model, build_state(text, repeat, cache, f"{config['name']}-amorce"), questions, config["name"], -1)
-            for i in range(warm_repeats):
-                results.append(call(client, url, model, build_state(text, repeat, cache, f"{config['name']}-{i}"),
-                                    questions, config["name"], i))
-            print(f"{config['name']}: fait", file=sys.stderr)
-
     out_dir = SPIKE_DIR / require_key(params, "output_dir")
     out_dir.mkdir(exist_ok=True)
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    rows = summarize(results)
-    (out_dir / f"s1_{stamp}.json").write_text(
-        json.dumps({"meta": meta, "summary": rows, "results": [asdict(r) for r in results]},
-                   ensure_ascii=False, indent=2), encoding="utf-8")
-    report = out_dir / f"s1_{stamp}.md"
-    report.write_text(render_markdown(meta, rows, results), encoding="utf-8")
-    return report
+    reports = []
+    with httpx.Client(timeout=require_key(params, "http_timeout")) as client:
+        for model in models:
+            results = measure(client, base, url, model, prepared, cold_repeats, warm_repeats)
+            unload(client, base, model)
+            meta = environment(client, base, model)
+            rows = summarize(results)
+            stem = report_stem(model, stamp)
+            (out_dir / f"{stem}.json").write_text(
+                json.dumps({"meta": meta, "summary": rows, "results": [asdict(r) for r in results]},
+                           ensure_ascii=False, indent=2), encoding="utf-8")
+            report = out_dir / f"{stem}.md"
+            report.write_text(render_markdown(meta, rows, results), encoding="utf-8")
+            reports.append(report)
+    return reports
+
+
+def measure(client: Any, base: str, url: str, model: str, prepared: list[tuple[dict[str, Any], str, dict[str, Any]]],
+            cold_repeats: int, warm_repeats: int) -> list[CallResult]:
+    """Mesure un modèle : appels à froid, puis chaque configuration à chaud.
+
+    Args:
+        client: client HTTP.
+        base: URL de base d'Ollama.
+        url: URL de ``/v1/systemone``.
+        model: modèle mesuré.
+        prepared: (configuration, texte, questions) pour chaque configuration.
+        cold_repeats: nombre d'appels à froid.
+        warm_repeats: nombre d'appels comptés par configuration.
+
+    Returns:
+        Tous les appels mesurés.
+
+    Raises:
+        httpx.HTTPError: échec du déchargement du modèle.
+    """
+    results: list[CallResult] = []
+    _, first_text, first_questions = prepared[0]
+    for i in range(cold_repeats):
+        unload(client, base, model)
+        results.append(call(client, url, model, build_state(first_text, 1, False, f"froid-{i}"), first_questions, "froid", i))
+        print(f"{model} froid {i}: {results[-1].latency_s:.2f} s", file=sys.stderr)
+    for config, text, questions in prepared:
+        repeat, cache = config.get("state_repeat", 1), require_key(config, "cache")
+        call(client, url, model, build_state(text, repeat, cache, f"{config['name']}-amorce"), questions, config["name"], -1)
+        for i in range(warm_repeats):
+            results.append(call(client, url, model, build_state(text, repeat, cache, f"{config['name']}-{i}"),
+                                questions, config["name"], i))
+        print(f"{model} {config['name']}: fait", file=sys.stderr)
+    return results
 
 
 if __name__ == "__main__":
-    print(run())
+    for path in run():
+        print(path)

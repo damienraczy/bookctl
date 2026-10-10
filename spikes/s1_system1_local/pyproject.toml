@@ -1,7 +1,7 @@
 [project]
-name = "spike-s1-tev1-latence"
+name = "spike-s1-system1-local"
 version = "0.1.0"
-description = "Spike S1 : temps de réaction de Tev1 4B en Ollama local"
+description = "Spike S1 : temps de réaction des modèles System 1 en Ollama local"
 requires-python = ">=3.12,<3.14"
 dependencies = [
     "httpx>=0.27",

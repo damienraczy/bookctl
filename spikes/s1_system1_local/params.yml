@@ -1,6 +1,6 @@
 # Paramètres du spike S1 (aucun secret : noms de variables d'environnement seulement)
 
-model: tev1:4b
+models: [tev1:4b, nimble]           # mesurés l'un après l'autre ; chacun est déchargé après sa série
 base_url: OLLAMA_LOCAL_URL          # variable d'env. → ex. http://localhost:11434
 endpoint: /v1/systemone
 http_timeout: 120                   # secondes
@@ -80,8 +80,10 @@ configs:
   - {name: score_court,       state: court, primitive: tics,      cache: false}
   - {name: choice_court,      state: court, primitive: registre,  cache: false}
   - {name: noul_moyen,        state: moyen, primitive: ternaire,  cache: false}
-  - {name: noul_long,         state: moyen, state_repeat: 3, primitive: ternaire, cache: false}
-  - {name: noul_hors_limite,  state: moyen, state_repeat: 6, primitive: ternaire, cache: false}
+  - {name: noul_moyen_x3,     state: moyen, state_repeat: 3,  primitive: ternaire, cache: false}
+  - {name: noul_moyen_x6,     state: moyen, state_repeat: 6,  primitive: ternaire, cache: false}
+  - {name: noul_moyen_x12,    state: moyen, state_repeat: 12, primitive: ternaire, cache: false}
+  - {name: noul_moyen_x20,    state: moyen, state_repeat: 20, primitive: ternaire, cache: false}
   - {name: q4_moyen,          state: moyen, questions: 4,  cache: false}
   - {name: q16_moyen,         state: moyen, questions: 16, cache: false}
   - {name: q4_moyen_cache,    state: moyen, questions: 4,  cache: true}

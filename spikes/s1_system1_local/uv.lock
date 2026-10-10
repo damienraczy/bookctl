@@ -169,7 +169,7 @@ wheels = [
 ]
 
 [[package]]
-name = "spike-s1-tev1-latence"
+name = "spike-s1-system1-local"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

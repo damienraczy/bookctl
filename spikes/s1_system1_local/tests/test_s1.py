@@ -66,3 +66,8 @@ def test_summarize_ignore_les_echecs_dans_les_durees():
     assert [r["config"] for r in rows] == ["x", "y"]
     assert rows[0]["ok"] == 1 and rows[0]["total"] == 2 and rows[0]["max"] == 1.0
     assert rows[0]["errors"] == ["HTTPStatusError: 500"]
+
+
+def test_report_stem_remplace_les_separateurs():
+    assert s1.report_stem("tev1:4b", "20261010") == "s1_tev1-4b_20261010"
+    assert s1.report_stem("org/nimble", "x") == "s1_org-nimble_x"
