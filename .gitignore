@@ -6,6 +6,7 @@
 
 !/.gitignore
 !/README.md
+!/README.ar*.md
 !/params.sample.yml
 !/LICENSE.md
 !/LICENSE-docs.md

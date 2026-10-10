@@ -21,12 +21,11 @@ par étape, avec des LLM dans le cloud, sous le contrôle permanent de l'auteur.
 
 | Dossier | Contenu |
 |---|---|
-| [`specs/`](specs/) | spécifications : présentation du projet, principes, architecture, agents, CLI, System 1, dataset, boucles DSPy |
+| [`specs/`](specs/) | spécifications : principes, architecture, agents, CLI, System 1, dataset, boucles DSPy |
 | [`doc-tools/`](doc-tools/) | notes techniques sur les outils (System 1, Vale, DSPy, GEPA, LLM cloud, Pandoc, CLI, git) |
 | [`params.sample.yml`](params.sample.yml) | modèle de fichier de paramètres |
 
-Point d'entrée : [`specs/00-projet.md`](specs/00-projet.md), puis
-[`specs/01-architecture.md`](specs/01-architecture.md) et
+Point d'entrée : [`specs/01-architecture.md`](specs/01-architecture.md), puis
 [`specs/PRINCIPES.md`](specs/PRINCIPES.md).
 
 ## Données

@@ -30,7 +30,6 @@ Tout est ignoré, puis chaque chemin de l'outil est réautorisé explicitement :
 # Réautoriser explicitement les chemins de l'outil
 !/.gitignore
 !/README.md
-!/README.ar*.md
 !/specs/
 !/doc-tools/
 /doc-tools/*

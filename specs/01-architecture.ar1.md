@@ -1,7 +1,7 @@
 # 01 — Architecture du pipeline de génération de manuel
 
-> Document de référence. Fige les choix d'architecture. Présentation du projet :
-> `00-projet.md`.
+> Document de référence. Fige les choix d'architecture. Remplace toute décision
+> antérieure qui le contredirait.
 >
 > Rédigé le 9 octobre 2026.
 
@@ -269,7 +269,6 @@ Calculés en code dès P0, sur le sujet pilote :
 
 ## 9. Documents de spécification
 
-- `specs/00-projet.md` — présentation du projet, périmètre, lexique, guide de lecture.
 - `specs/PRINCIPES.md` — socle de développement.
 - `specs/02-agents.md` — agents, coordination, table des étapes.
 - `specs/03-cli.md` — `bookctl` : espace de travail, commandes, cibles, sorties, versionnement.
