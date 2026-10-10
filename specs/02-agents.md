@@ -341,8 +341,8 @@ distincts de `write` et de `rewrite` ; sinon exception.
 ## 12. Connexion à DSPy
 
 **[S02-11]** Les agents LLM sont des **modules DSPy** (signature + `Predict` ou
-`ChainOfThought`). Leurs modèles sont déclarés dans `params.yml` (stock de
-modèles + profils, `03-cli.md` § 2.4) et instanciés par `dspy.LM`
+`ChainOfThought`). Leurs modèles sont déclarés dans `params.yml` (modèles et
+profils, `03-cli.md` § 2.4) et instanciés par `dspy.LM`
 (`doc-tools/llm-cloud.md`).
 
 | Agent / composant | Artefact DSPy qu'il consomme |

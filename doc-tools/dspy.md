@@ -149,7 +149,7 @@ def editorial_metric(example, prediction, trace=None, pred_name=None, pred_trace
 |---|---|
 | Changements d'API (3.4 → 3.5) | version épinglée, montée de version volontaire |
 | Sur-ingénierie (DSPy comme mini-langage) | un module par agent, signatures simples, pas de composition DSPy entre agents (les agents communiquent par fichiers) |
-| Adaptateur inadapté à un modèle cloud | tests d'intégration par modèle du stock |
+| Adaptateur inadapté à un modèle cloud | tests d'intégration par modèle déclaré dans `params.yml` |
 
 ---
 

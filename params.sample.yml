@@ -5,16 +5,21 @@
 # sans `price` a un coût affiché comme inconnu, jamais comme nul.
 # Aucun secret ici : `url` et `api_key` sont des NOMS de variables
 # d'environnement, définies dans ~/.env.
+# Fournisseurs, modèles, réglages et profils ci-dessous sont des EXEMPLES :
+# chaque utilisateur déclare les siens.
+# `think` : obligatoire pour un modèle qui raisonne, valeur parmi celles
+# annoncées par /api/show (doc-tools/llm-cloud.md § 5).
 # Références : specs/03-cli.md § 2.4, doc-tools/llm-cloud.md.
 
-### Stock de modèles disponibles (LLM génératifs, cloud)
+### Modèles déclarés (LLM génératifs, cloud)
 models:
 
   deepseek-v4-pro:
     provider: ollama
     name: deepseek-v4-pro:cloud
-    url: OLLAMA_CLOUD_URL
+    url: OLLAMA_CLOUD_URL  # API native, ex. https://ollama.com/api
     api_key: OLLAMA_API_KEY
+    think: high            # false | low | high | max
     timeout: 120
     price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement, pas de facturation au token
 
@@ -23,6 +28,7 @@ models:
     name: deepseek-v4.1-flash:cloud
     url: OLLAMA_CLOUD_URL
     api_key: OLLAMA_API_KEY
+    think: high            # false | low | high | max
     timeout: 120
     price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement, pas de facturation au token
 
@@ -39,7 +45,7 @@ models:
     name: glm-5.3-flash:cloud
     url: OLLAMA_CLOUD_URL
     api_key: OLLAMA_API_KEY
-    think: high            # low | high | max
+    think: high            # low | high | max ; raisonnement forcé, jamais false
     timeout: 720
     price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement, pas de facturation au token
 
@@ -48,10 +54,12 @@ models:
     name: gemma4:31b-cloud
     url: OLLAMA_CLOUD_URL
     api_key: OLLAMA_API_KEY
+    think: false           # false | true
+    options: { temperature: 1.0, top_p: 0.95 }   # réglages recommandés par la fiche Gemma 4
     timeout: 120
     price: { input_per_mtok: 0.0, output_per_mtok: 0.0 }   # Ollama Cloud : abonnement, pas de facturation au token
 
-### Profils : rôle → modèle du stock
+### Profils : rôle → modèle déclaré
 # Rôles (specs/02-agents.md § 6 et § 11) :
 #   plan      Planificateur, Recherche
 #   write     Rédacteur

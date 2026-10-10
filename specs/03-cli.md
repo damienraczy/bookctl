@@ -123,11 +123,12 @@ il ne peut pas être un nom réservé de l'espace (`dataset`, `reports`).
 
 ### 2.4 `params.yml`
 
-Un seul fichier, à la racine de l'espace de travail. Structure (exemple complet
-dans `params.sample.yml` du dépôt) :
+Un seul fichier, à la racine de l'espace de travail. L'utilisateur y déclare
+ses fournisseurs, modèles, réglages et profils ; `params.sample.yml` du dépôt
+n'en donne que des exemples. Structure :
 
 ```yaml
-# Stock de modèles : nom logique → fournisseur, identifiant, variables d'environnement
+# Modèles déclarés : nom logique → fournisseur, identifiant, variables d'environnement, réglages
 models:
   glm-flash:
     provider: ollama                # Ollama Cloud
@@ -135,8 +136,10 @@ models:
     url: OLLAMA_CLOUD_URL           # NOM de la variable d'environnement, pas la valeur
     api_key: OLLAMA_API_KEY
     timeout: 120
+    think: high                     # raisonnement (doc-tools/llm-cloud.md § 5)
+    options: { temperature: 0.7 }   # optionnel : réglages de génération (§ 6)
 
-# Profils : rôles → modèles du stock
+# Profils : rôles → modèles déclarés
 .profils:
   standard: &standard
     llm:
@@ -155,8 +158,17 @@ vale: { ... }
 dspy: { ... }                       # 06-boucles-dspy.md
 ```
 
-**[S03-04]** Au chargement : rôle sans modèle, modèle absent du stock, variable
-d'environnement non définie → exception (code `5`).
+**[S03-04]** Au chargement : rôle sans modèle, rôle associé à un modèle non
+déclaré, variable d'environnement non définie, champ d'`options` non transmis
+par la voie d'appel du fournisseur → exception (code `5`).
+
+**[S03-26]** Avant le premier appel d'un modèle `provider: ollama`, `bookctl`
+interroge `/api/show` et lève une exception (code `5`) si : le modèle est
+inconnu ; `think` est absent alors que le modèle déclare la capacité `thinking` ;
+`think` est présent alors qu'il ne la déclare pas ; la valeur de `think` ne
+figure pas parmi les valeurs annoncées. Ollama ignorant sans erreur une valeur
+non acceptée, cette vérification est la seule garantie que le réglage déclaré
+est appliqué (`doc-tools/llm-cloud.md` § 5).
 
 ### 2.5 Résolution du sujet
 
@@ -508,8 +520,9 @@ refait ou repris (`resume`).
 
 **[S03-20]** Chaque appel modèle (LLM ou System 1) ajoute une ligne JSON dans
 `state/audit/<date>.jsonl` : horodatage, commande, cible, rôle, fournisseur,
-modèle et version, prompts envoyés (ou leur référence de révision), paramètres,
-réponse, jetons, coût estimé, durée. Le journal reste local, dans le sujet.
+modèle et version, prompts envoyés (ou leur référence de révision), paramètres
+(dont `think` et `options`), réponse, raisonnement renvoyé par le modèle s'il y
+en a un, jetons, coût estimé, durée. Le journal reste local, dans le sujet.
 
 ---
 
