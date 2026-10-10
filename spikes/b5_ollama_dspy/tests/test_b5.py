@@ -21,11 +21,11 @@ def test_name_variants_without_suffix_keeps_single_name() -> None:
 
 
 def test_ollama_models_filters_provider_and_reads_think() -> None:
-    stock = {"models": {
+    declared = {"models": {
         "a": {"provider": "ollama", "name": "a:cloud", "think": "high"},
         "b": {"provider": "anthropic", "name": "b"},
     }}
-    assert b5.ollama_models(stock) == [b5.ModelSpec(key="a", name="a:cloud", think="high")]
+    assert b5.ollama_models(declared) == [b5.ModelSpec(key="a", name="a:cloud", think="high")]
 
 
 def test_ollama_models_without_ollama_raises() -> None:

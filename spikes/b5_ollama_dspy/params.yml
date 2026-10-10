@@ -1,6 +1,6 @@
 # Paramètres du spike B5 (aucun secret : noms de variables d'environnement seulement)
 
-# Stock de modèles à tester : le modèle de paramètres du dépôt
+# Modèles à tester : ceux déclarés dans l'exemple de paramètres du dépôt
 models_file: ../../params.sample.yml
 
 endpoints:

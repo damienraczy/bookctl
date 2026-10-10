@@ -1,6 +1,6 @@
 """Spike B5, approfondissement : le paramètre ``think`` sur Ollama Cloud.
 
-Pour chaque modèle Ollama du stock, mesure :
+Pour chaque modèle Ollama déclaré dans ``params.sample.yml``, mesure :
 
 1. ce que le modèle déclare dans ``/api/show`` (capacités, ``thinking.values``) ;
 2. en API native ``/api/chat``, l'effet de chaque valeur de ``think`` (booléens et

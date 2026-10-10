@@ -1,6 +1,6 @@
 """Spike B5 : appeler les modèles Ollama Cloud depuis DSPy.
 
-Mesure, pour chaque modèle Ollama du stock de ``params.sample.yml`` :
+Mesure, pour chaque modèle Ollama déclaré dans ``params.sample.yml`` :
 la forme de nom acceptée par l'API, la voie d'accès DSPy qui fonctionne
 (compatibilité OpenAI ou voie native ``ollama_chat/``) et la transmission du
 niveau de raisonnement (``think``). Voir ``README.md`` pour la question, le
@@ -43,10 +43,10 @@ class ConfigError(Exception):
 
 @dataclass(frozen=True)
 class ModelSpec:
-    """Un modèle du stock de ``params.sample.yml``.
+    """Un modèle déclaré dans ``params.sample.yml``.
 
     Attributes:
-        key: nom logique du modèle dans le stock.
+        key: nom logique du modèle dans ``models``.
         name: identifiant déclaré pour le fournisseur.
         think: niveau de raisonnement déclaré (``low``, ``high``, ``max``) ou None.
     """
@@ -152,19 +152,19 @@ def require_env(var_name: str) -> str:
     return value
 
 
-def ollama_models(stock: dict[str, Any]) -> list[ModelSpec]:
-    """Extrait les modèles ``provider: ollama`` du stock.
+def ollama_models(declared: dict[str, Any]) -> list[ModelSpec]:
+    """Extrait les modèles ``provider: ollama`` déclarés.
 
     Args:
-        stock: contenu de ``params.sample.yml``.
+        declared: contenu de ``params.sample.yml``.
 
     Returns:
         Les modèles Ollama, dans l'ordre du fichier.
 
     Raises:
-        ConfigError: stock absent, modèle sans ``name``, ou aucun modèle Ollama.
+        ConfigError: ``models`` absent, modèle sans ``name``, ou aucun modèle Ollama.
     """
-    models = require_key(stock, "models")
+    models = require_key(declared, "models")
     if not isinstance(models, dict):
         raise ConfigError("`models` doit être un dictionnaire")
     specs = []
@@ -177,7 +177,7 @@ def ollama_models(stock: dict[str, Any]) -> list[ModelSpec]:
             raise ConfigError(f"Modèle sans `name` : {key}")
         specs.append(ModelSpec(key=key, name=str(spec["name"]), think=spec.get("think")))
     if not specs:
-        raise ConfigError("Aucun modèle `provider: ollama` dans le stock")
+        raise ConfigError("Aucun modèle `provider: ollama` déclaré")
     return specs
 
 
@@ -469,8 +469,8 @@ def run() -> Path:
     """
     load_dotenv(os.path.expanduser("~/.env"), override=True)
     params = load_yaml(PARAMS_FILE)
-    stock = load_yaml((SPIKE_DIR / require_key(params, "models_file")).resolve())
-    models = ollama_models(stock)
+    declared = load_yaml((SPIKE_DIR / require_key(params, "models_file")).resolve())
+    models = ollama_models(declared)
     native_base = require_env(require_key(params, "endpoints.native_base_url"))
     api_key = require_env(require_key(params, "endpoints.api_key"))
     openai_base = require_key(params, "endpoints.openai_base_url")

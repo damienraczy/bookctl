@@ -6,7 +6,7 @@ Comment `bookctl` doit-il construire le `dspy.LM` d'un modèle Ollama Cloud
 déclaré dans `params.yml` ? Trois points sont non vérifiés dans
 `doc-tools/llm-cloud.md` :
 
-1. **Noms de modèles** : l'API accepte-t-elle les noms du stock tels quels
+1. **Noms de modèles** : l'API accepte-t-elle les noms déclarés tels quels
    (`glm-5.3-flash:cloud`, `gemma4:31b-cloud`), ou faut-il le nom listé par
    `/api/tags` (sans suffixe `cloud`) ?
 2. **Voie d'accès DSPy** : compatibilité OpenAI (`openai/<nom>` sur
@@ -17,7 +17,7 @@ déclaré dans `params.yml` ? Trois points sont non vérifiés dans
 
 ## Protocole
 
-Pour chaque modèle `provider: ollama` du stock (`params.sample.yml` du dépôt) :
+Pour chaque modèle `provider: ollama` déclaré dans `params.sample.yml` du dépôt :
 
 | Étape | Appel | Mesure |
 |---|---|---|
@@ -64,7 +64,7 @@ Résultats : `out/b5_<horodatage>.json` (brut) et `out/b5_<horodatage>.md`
 Question : comment le niveau de raisonnement se règle-t-il, et où le
 raisonnement revient-il, selon la voie d'accès ?
 
-Pour chaque modèle Ollama du stock :
+Pour chaque modèle Ollama déclaré dans `params.sample.yml` :
 
 1. `POST /api/show` : capacités et valeurs de `think` déclarées
    (`thinking.values`, `thinking.default`) ;
