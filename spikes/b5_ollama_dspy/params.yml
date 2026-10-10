@@ -1,0 +1,25 @@
+# Paramètres du spike B5 (aucun secret : noms de variables d'environnement seulement)
+
+# Stock de modèles à tester : le modèle de paramètres du dépôt
+models_file: ../../params.sample.yml
+
+endpoints:
+  native_base_url: OLLAMA_CLOUD_URL          # variable d'env. → API native, ex. https://ollama.com/api
+  api_key: OLLAMA_API_KEY                    # variable d'env. → clé
+  openai_base_url: https://ollama.com/v1     # compatibilité OpenAI (doc Ollama Cloud)
+  ollama_chat_base_url: https://ollama.com   # voie native LiteLLM (ollama_chat/)
+
+# Suffixes retirés pour construire la variante « nom du catalogue »
+cloud_name_suffixes: [":cloud", "-cloud"]
+
+probe:
+  prompt_dir: prompt
+  prompt_name: capitale                       # prompt/capitale_system.md, prompt/capitale_user.md
+  variables:
+    territoire: la Nouvelle-Calédonie
+  expected_substring: Nouméa
+  max_tokens: 2000
+  temperature: 0.0
+  http_timeout: 120                           # secondes, appels HTTP natifs
+
+output_dir: out

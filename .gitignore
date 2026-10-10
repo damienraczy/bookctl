@@ -19,8 +19,14 @@
 /doc-tools/*
 !/doc-tools/*.md
 
+!/spikes/
+
 # Exclus même dans les chemins autorisés : fichiers système, versions
 # archivées (.arN) et dossiers old (specs/PRINCIPES.md § 2)
 .DS_Store
 *.ar[0-9]*.*
 old/
+out/
+.venv/
+__pycache__/
+.pytest_cache/
