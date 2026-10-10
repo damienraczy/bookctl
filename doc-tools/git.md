@@ -11,7 +11,8 @@
 Vale, liste des motifs, specs, documentation, modèle de paramètres
 (`params.sample.yml`).
 
-**Jamais** : manuscrits, instructions de l'utilisateur, rapports, journaux
+**Jamais** : versions archivées des documents (`*.arN.*`), anciennes versions,
+contenu des dossiers `old`, manuscrits, instructions de l'utilisateur, rapports, journaux
 d'audit, dataset étiqueté, `params.yml`, secrets. Ce sont des données
 personnelles ou sensibles ; elles vivent dans l'espace de travail, hors dépôt.
 
@@ -30,7 +31,6 @@ Tout est ignoré, puis chaque chemin de l'outil est réautorisé explicitement :
 # Réautoriser explicitement les chemins de l'outil
 !/.gitignore
 !/README.md
-!/README.ar*.md
 !/specs/
 !/doc-tools/
 /doc-tools/*
@@ -39,6 +39,11 @@ Tout est ignoré, puis chaque chemin de l'outil est réautorisé explicitement :
 !/LICENSE.md
 !/LICENSE-docs.md
 !/NOTICE
+
+# Exclus même dans les chemins autorisés
+.DS_Store
+*.ar[0-9]*.*
+old/
 ```
 
 Au fil du développement, on ajoute `!/src/`, `!/tests/`, `!/prompt/`, `!/vale/`,

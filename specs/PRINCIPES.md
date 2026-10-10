@@ -65,10 +65,11 @@ Exemple : `feat(cli): [S03-05] [GREEN] résolution du sujet par --subject`.
 **git versionne le code de l'outil, jamais les travaux de rédaction.** Les manuscrits, instructions, rapports, journaux d'audit et datasets construits à partir des textes de l'utilisateur sont des **données personnelles**. Ils vivent dans l'espace de travail, hors dépôt.
 
 - Le dépôt est **public**. Il ne contient ni secret, ni donnée personnelle, ni travail de rédaction.
+- Les versions archivées des documents (`*.arN.*`), les anciennes versions et le contenu des dossiers `old` restent en local : ils n'entrent pas dans git.
 - Le `.gitignore` fonctionne **par liste blanche** : tout est ignoré (`/*`), puis seuls les chemins de l'outil sont réautorisés explicitement. Un nouveau dossier n'entre dans git que par une ligne ajoutée volontairement au `.gitignore`.
 - Un test vérifie que les dossiers d'un sujet (`book/`, `state/`, `reports/`, `history/`) et `params.yml` sont ignorés.
 - Le versionnement des artefacts d'un sujet est assuré par `bookctl` lui-même (`03-cli.md` § 8), pas par git.
-
+- les documents archivés, les anciennes versions et les documents des dossier `old`ne sont pas archivés
 ---
 
 ## 3. Identifiants d'exigences

@@ -6,7 +6,6 @@
 
 !/.gitignore
 !/README.md
-!/README.ar*.md
 !/params.sample.yml
 !/LICENSE.md
 !/LICENSE-docs.md
@@ -20,5 +19,8 @@
 /doc-tools/*
 !/doc-tools/*.md
 
-# Fichiers système, même dans les chemins autorisés
+# Exclus même dans les chemins autorisés : fichiers système, versions
+# archivées (.arN) et dossiers old (specs/PRINCIPES.md § 2)
 .DS_Store
+*.ar[0-9]*.*
+old/
