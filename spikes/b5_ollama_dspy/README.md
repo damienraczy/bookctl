@@ -58,3 +58,25 @@ Prérequis dans `~/.env` : `OLLAMA_CLOUD_URL` (API native, ex.
 
 Résultats : `out/b5_<horodatage>.json` (brut) et `out/b5_<horodatage>.md`
 (synthèse), non versionnés.
+
+## Approfondissement : `think` (`b5_think.py`)
+
+Question : comment le niveau de raisonnement se règle-t-il, et où le
+raisonnement revient-il, selon la voie d'accès ?
+
+Pour chaque modèle Ollama du stock :
+
+1. `POST /api/show` : capacités et valeurs de `think` déclarées
+   (`thinking.values`, `thinking.default`) ;
+2. `/api/chat` natif avec `think` = `false`, `true` et chaque niveau déclaré ;
+3. `/v1/chat/completions` (HTTP brut) avec `reasoning_effort` = `none`, `low`, `high` ;
+4. DSPy (`openai/<nom>`) avec les mêmes `reasoning_effort`.
+
+La question demande un calcul (jours entre deux dates, réponse `99`) : une
+question triviale ne déclenche pas de raisonnement et masquerait l'effet du
+réglage. Mesures : champ de raisonnement présent, taille, tokens générés,
+justesse.
+
+```bash
+uv run python b5_think.py     # résultats : out/b5_think_<horodatage>.{json,md}
+```

@@ -23,3 +23,14 @@ probe:
   http_timeout: 120                           # secondes, appels HTTP natifs
 
 output_dir: out
+
+# Approfondissement de `think` (b5_think.py)
+think_probe:
+  prompt_name: raisonnement                   # prompt/raisonnement_system.md, prompt/raisonnement_user.md
+  variables:
+    date_debut: 24 septembre 1853
+    date_fin: 1er janvier 1854
+  expected_substring: "99"
+  native_think_values: [false, true]          # complétées par les niveaux annoncés dans /api/show
+  openai_reasoning_efforts: [none, low, high]
+  dspy_reasoning_efforts: [none, low, high]
